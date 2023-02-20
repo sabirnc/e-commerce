@@ -24,8 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/' , usersRouter);
 app.use('/admin', adminRouter);
 
-const uri = "mongodb+srv://sabir:sabir123@cluster0.vwmhdpe.mongodb.net/ecommerce?retryWrites=true&w=majority"
-mongoose.connect(uri , 
+mongoose.connect(process.env.uri , 
   { useNewUrlParser: true, useUnifiedTopology: true }
 )
 .then( () => {
