@@ -141,6 +141,9 @@
             if(data.message.includes("incorrect password")){
 				passwordError.textContent = data.message
 			}
+			if(data.message.includes("admin blocked")){
+				passwordError.textContent = data.message
+			}
             
            }catch (err){
             console.log(err)

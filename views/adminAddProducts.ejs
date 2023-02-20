@@ -42,6 +42,12 @@
 
 <body>
 
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+
     <!-- PAGE LOADING
     ================================================== -->
     <div id="preloader"></div>
@@ -52,68 +58,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="index.html">
-                <img src="../img/logos/logo-footer.png" alt="...">
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li>
-                            <a href="/admin"> <i class="menu-icon icon-home4"></i><span>Dashboard</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-inbox"></i><span>Category</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/category">Category</a></li>
-                                <li><a href="/admin/addcategory">Add Categories</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-layers"></i><span>Products</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/products">Products</a></li>
-                                <li><a href="/admin/product-details">Product Details</a></li>
-                                <li><a href="product-cart.html">Product Cart</a></li>
-                                <li><a href="/admin/add-product">Add Products</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-flash_on"></i><span>Orders</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/orders">Orders</a></li>
-                                <li><a href="/admin/order-details">Order Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/admin/customers"> <i class="menu-icon icon-code"></i><span>Customers</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-format_list_bulleted"></i><span>Coupons</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/coupons">Coupons</a></li>
-                                <li><a href="/admin/create-coupons">Create Coupons</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-divider"></li>
-                        <li>
-                            <a href="#"> <i class="menu-icon icon-public"></i><span>Logout</span> </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+        <%-include("./partials/adminsidebar.ejs")  %>   
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -269,7 +214,8 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div>
-                                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="file" multiple>
+                                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="file" multiple required>
+                                                            <div class="error input-error"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -278,7 +224,7 @@
                                         </div>
                                         <div class="col-md-12 mb-4">
                                             <label for="validationCustom09">Category</label>
-                                            <select class="form-select form-control" id="validationCustom09"aria-label="Default select example" name="productCategory">
+                                            <select class="form-select form-control" id="validationCustom09"aria-label="Default select example" name="productCategory" required>
                                                 <!-- <option selected>Clothing</option>
                                                 <option value="1">Shoes</option>
                                                 <option value="2">Electronics</option>
@@ -586,7 +532,7 @@
     ================================================== -->
     <script>
         const form = document.querySelector("#add-form")
-       
+        const inputError = document.querySelector(".error.input-error")
         form.addEventListener("submit" ,async (e) => {
             e.preventDefault()
             const productName = form.productName.value
@@ -608,8 +554,6 @@
             for(i=0; i < file.files.length; i++){
                 formData.append("file" , file.files[i] )
             }
-            
-            
             try{
                 const res = await fetch("/admin/add-product" , {
                     method:"POST",
@@ -617,8 +561,14 @@
                 })
 
                 const data = await res.json()
-                if(data.message.includes("success")){
+                console.log(data.errors)
+                if(data.message == "success"){
                     location.assign("/admin/products")
+                }
+
+                if(data.errors == "maximum limit is four"){
+                  console.log("hello")
+                  inputError.textContent = data.errors
                 }
             }
             catch(err){

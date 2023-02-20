@@ -42,68 +42,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="index.html">
-                <img src="../img/logos/logo-footer.png" alt="...">
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li>
-                            <a href="/admin"> <i class="menu-icon icon-home4"></i><span>Dashboard</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-inbox"></i><span>Category</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/category">Category</a></li>
-                                <li><a href="/admin/addcategory">Add Categories</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-layers"></i><span>Products</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/products">Products</a></li>
-                                <li><a href="/admin/product-details">Product Details</a></li>
-                                <li><a href="product-cart.html">Product Cart</a></li>
-                                <li><a href="/admin/add-product">Add Products</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-flash_on"></i><span>Orders</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/orders">Orders</a></li>
-                                <li><a href="/admin/order-details">Order Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/admin/customers"> <i class="menu-icon icon-code"></i><span>Customers</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-format_list_bulleted"></i><span>Coupons</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/coupons">Coupons</a></li>
-                                <li><a href="/admin/create-coupons">Create Coupons</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-divider"></li>
-                        <li>
-                            <a href="#"> <i class="menu-icon icon-public"></i><span>Logout</span> </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+        <%-include("./partials/adminsidebar.ejs")%>
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -252,11 +191,7 @@
                                         <table class="table table-order">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">
-                                                        <div class="custom-control custom-checkbox mb-0">
-                                                            <input type="checkbox" class="form-check-input" id="exampleCheck" />
-                                                        </div>
-                                                    </th>
+                                                  
                                                     <th scope="col">ID</th>
                                                     <th scope="col">Campaigns Name</th>
                                                     <th scope="col">Code</th>
@@ -270,30 +205,32 @@
 
                                                   <% coupons.map( (coupon , index) => { %> 
                                                     <tr>
-                                                        <th scope="row">
-                                                            <div class="custom-control custom-checkbox mb-0">
-                                                                <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                                            </div>
-                                                        </th>
                                                         <td><%= index+1 %> </td>
                                                         <td><%= coupon.couponName  %> </td>
                                                         <td><%= coupon.couponCode %> </td>
                                                         <td>
-                                                            <div class="custom-progress bg-blue progress mb-2">
-                                                                <div class="animated custom-bar progress-bar slideInLeft" style="width:20%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="10" role="progressbar"></div>
+                                                            <div class="custom-progress bg-blue">
+                                                                <progress id="file" value="<%=coupon.quantity%>" max="<%coupon.quantity%> "> 32% </progress>
                                                             </div>
                                                             <div class="progress-text">
-                                                                <div><%= coupon.quantity %> remaining </div>
+                                                                <div><%=coupon.quantity%> remaining </div>
                                                             </div>
                                                         </td>
-                                                        <td><%=coupon.endDate.toDateString()  %> </td>
-                                                        <td><%= coupon.startDate.toDateString() %> </td>
+                                                        <td><%=coupon.endDate.toLocaleString()  %> </td>
+                                                        <td><%= coupon.startDate.toLocaleString() %> </td>
                                                         <td><i class="fas fa-circle text-danger me-2 f-s-10"></i>
                                                         <% if(coupon.endDate < Date.now()){ %> 
                                                             expired
                                                         <% } else { %> 
                                                             active
                                                         <% } %> 
+                                                        </td>
+                                                        <td id="status-<%=coupon._id%>" onclick="disableCoupon('<%=coupon._id%>')">
+                                                            <% if(coupon.status){ %> 
+                                                                <button class="btn btn-outline-danger">enable</button>
+                                                             <% } else{%>  
+                                                                <button class="btn btn-outline-success">disable</button>
+                                                            <% } %> 
                                                         </td>
                                                     </tr>
                                                   <% }) %> 
@@ -693,7 +630,24 @@
 
     <!-- ALL JS INCLUDE
     ================================================== -->
-
+    <script>
+        async function disableCoupon(id){
+          const statusDiv = document.getElementById("status-"+id)  
+          console.log(statusDiv)
+          const res = await fetch("/admin/disable-coupon",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id})
+          })   
+          const data = await res.json()
+          console.log(data)
+          if(data.data){
+            statusDiv.innerHTML = `<button class="btn btn-outline-danger">enable</button>`
+          }else{
+            statusDiv.innerHTML = `<button class="btn btn-outline-success">disable</button>`
+          }
+        }
+    </script>
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
 

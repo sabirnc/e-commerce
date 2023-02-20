@@ -30,7 +30,7 @@
                         <a href="#">Links</a>
                         <ul>
                             <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
-                            <li><a href="/wishlist"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
+                            <li><a href="/wishlist"><i class="icon-heart-o"></i>Wishlist <span></span></a></li>
                             <li><a href="/about">About Us</a></li>
                             <!-- <li><a href="contact.html">Contact Us</a></li> -->
                             <li><a href="/my-account"><i class="icon-user"></i>My Account</a></li>
@@ -47,8 +47,7 @@
                 <button class="mobile-menu-toggler">
                     <span class="sr-only">Toggle mobile menu</span>
                     <i class="icon-bars"></i>
-                </button>
-
+                </button>   
                 <a href="/" class="logo">
                     <img src="/assets/images/logo.png" alt="Molla Logo" width="105" height="25">
                 </a>
@@ -81,90 +80,75 @@
                         </div><!-- End .header-search-wrapper -->
                     </form>
                 </div><!-- End .header-search -->
-                <div class="dropdown compare-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                        <i class="icon-random"></i>
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <ul class="compare-products">
-                            <li class="compare-product">
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                            </li>
-                            <li class="compare-product">
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                            </li>
-                        </ul>
-
-                        <div class="compare-actions">
-                            <a href="#" class="action-link">Clear All</a>
-                            <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                        </div>
-                    </div><!-- End .dropdown-menu -->
-                </div><!-- End .compare-dropdown -->
-
-                <div class="dropdown cart-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                        <i class="icon-shopping-cart"></i>
-                        <span class="cart-count">
-                            <% if(cart.length > 0){ %> 
-                                <%=cart[0].item.length  %> 
-                            <% }else{ %> 
-                                0
-                            <% } %>    
-                        </span>
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-cart-products">
-                        <% if(cart.length > 0){ %>  
-                            <% cart[0].item.map( item => { %> 
-                                <div class="product">
-                                    <div class="product-cart-details">
-                                        <h4 class="product-title">
-                                            <a href="product.html"><%=item.product.productName%> </a>
-                                        </h4>
-    
-                                        <span class="cart-product-info">
-                                            <span class="cart-product-qty"><%item.quantity %> </span>
-                                            x $ <%= item.product.productPrize  %> 
-                                        </span>
-                                    </div><!-- End .product-cart-details -->
-    
-                                    <figure class="product-image-container">
-                                        <a href="product.html" class="product-image">
-                                            <img src="/product/<%=item.product.productImage[0]%>" alt="product">
-                                        </a>
-                                    </figure>
-                                    <a onclick="deleteItem('<%=item.product._id%>' , '<%=item.quantity%>' , '<%=item.totalPrice%>')" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                </div>
-                              <% }) %>
-                        <% }else{ %> 
-                            <div class="product">
-                                item not added in Cart
-                            </div>
-                        <% } %> 
-                        </div><!-- End .cart-product -->
-
-                        <div class="dropdown-cart-total">
-                            <span>Total</span>
-
-                            <span class="cart-total-price">$ 
-                                <% if(cart.length > 0){ %> 
-                                    <%= cart[0].total  %>
-                                <% }else{ %> 
+                    <div class="dropdown cart-dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count">
+                            <% if(cart == null){ %>
+                                0 
+                            <% }else{ %>
+                                <% if(cart.item == null){ %>
                                     0
-                                <% } %> 
+                                <% }else{ %>
+                                    <%=cart.item.length  %>
+                                <% } %>    
+                            <% } %>    
                             </span>
-                        </div><!-- End .dropdown-cart-total -->
-
-                        <div class="dropdown-cart-action">
-                            <a href="/cart" class="btn btn-primary">View Cart</a>
-                            <a href="/checkout" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .dropdown-cart-total -->
-                    </div><!-- End .dropdown-menu -->
+                        </a>
+    
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products"> 
+                                <%if(cart == null){%> 
+                                 <div>no item added in cart </div>
+                                <% }else{ %>
+                                    <% if(cart.item != null){ %> 
+                                        <%cart.item.map( item => {%>
+                                            <div class="product">
+                                                <div class="product-cart-details">
+                                                    <h4 class="product-title">
+                                                        <a href="product.html"><%=item.product.productName%> </a>
+                                                    </h4>
+                
+                                                    <span class="cart-product-info">
+                                                        <span class="cart-product-qty"></span>
+                                                        <%=item.quantity  %>   x $ <%=item.product.productPrize%> 
+                                                    </span>
+                                                </div><!-- End .product-cart-details -->
+                
+                                                <figure class="product-image-container">
+                                                    <a href="product.html" class="product-image">
+                                                        <img src="/product/<%=item.product.productImage[0]%> " alt="product">
+                                                    </a>
+                                                </figure>
+                                    
+                                            </div> 
+                                        <% }) %> 
+                                    <% } %>    
+                                <% } %> 
+                                
+                            </div><!-- End .cart-product -->
+    
+                            <div class="dropdown-cart-total">
+                                <span>Total: 
+                                   <% if(cart != null){ %>  
+                                    <% if(cart.item != null){ %> 
+                                       $ <%=cart.total%>
+                                    <% } %>
+                                    <% }else{ %> 
+                                       $ 0
+                                    <% } %> 
+                                </span>
+    
+                                <span class="cart-total-price">$ 
+                            
+                                </span>
+                            </div>
+    
+                            <div class="dropdown-cart-action">
+                                <a href="/cart" class="btn btn-primary">View Cart</a>
+                                <a href="/checkout" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+                            </div>
+                        </div>
                 </div><!-- End .cart-dropdown -->
             </div><!-- End .header-right -->
         </div><!-- End .container -->

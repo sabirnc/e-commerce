@@ -28,6 +28,7 @@
 
     <!-- rangeslider plugin -->
     <link rel="stylesheet" href="/plugins/rangeslider/ion.rangeSlider.min.css" />
+  
 
     <!-- theme core css -->
     <link rel="stylesheet" href="/css/styles.css" />
@@ -57,6 +58,13 @@
         .error{
             color:red
         }
+        .btn-collapse{
+            font-size: 1rem;
+            font-weight: 700;
+            padding-left: 0;
+            text-transform:uppercase;
+
+        }
         
     </style>
     <!-- PAGE LOADING
@@ -69,68 +77,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="index.html">
-                <img src="/img/logos/logo-footer.png" alt="...">
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li>
-                            <a href="/admin"> <i class="menu-icon icon-home4"></i><span>Dashboard</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-inbox"></i><span>Category</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/category">Category</a></li>
-                                <li><a href="/admin/addcategory">Add Categories</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-layers"></i><span>Products</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/products">Products</a></li>
-                                <li><a href="/admin/product-details">Product Details</a></li>
-                                <li><a href="product-cart.html">Product Cart</a></li>
-                                <li><a href="/admin/add-product">Add Products</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-flash_on"></i><span>Orders</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/orders">Orders</a></li>
-                                <li><a href="/admin/order-details">Order Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/admin/customers"> <i class="menu-icon icon-code"></i><span>Customers</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-format_list_bulleted"></i><span>Coupons</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/coupons">Coupons</a></li>
-                                <li><a href="/admin/create-coupons">Create Coupons</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-divider"></li>
-                        <li>
-                            <a href="#"> <i class="menu-icon icon-public"></i><span>Logout</span> </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+        <%-include("./partials/adminsidebar.ejs")  %>
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -246,95 +193,19 @@
                             <div class="card card-white">
                                 <div class="card-body">
                                     <div class="mb-4 pb-4">
-                                        <h6 class="text-uppercase fw-bold mb-4">Categories</h6>
                                         <div id="accordion" class="accordion-style2">
                                             <div class="card">
                                                 <div class="card-header" id="headingOne">
                                                     <h5 class="mb-0">
-                                                        <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Games</button>
+                                                        <button class="btn btn-collapse" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Categories</button>
                                                     </h5>
                                                 </div>
                                                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
                                                     <div class="card-body">
                                                         <ul class="ps-0 product-sidebar list-unstyled mb-0">
-                                                            <li><a href="#">Alafi</a></li>
-                                                            <li><a href="#">CHG</a></li>
-                                                            <li><a href="#">Crystal Digital</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingTwo">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                            Headphones
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <ul class="ps-0 product-sidebar list-unstyled mb-0">
-                                                            <li><a href="#">JBL</a></li>
-                                                            <li><a href="#">Sony</a></li>
-                                                            <li><a href="#">Motorola</a></li>
-                                                            <li><a href="#">CRORA</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingThree">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                            Cameras
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <ul class="ps-0 product-sidebar list-unstyled mb-0">
-                                                            <li><a href="#">Nikon</a></li>
-                                                            <li><a href="#">Canon</a></li>
-                                                            <li><a href="#">Olympus</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingFour">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                            Smart TVs
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-bs-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <ul class="ps-0 product-sidebar list-unstyled mb-0">
-                                                            <li><a href="#">Thomson</a></li>
-                                                            <li><a href="#">Vu</a></li>
-                                                            <li><a href="#">LG</a></li>
-                                                            <li><a href="#">Sony</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card">
-                                                <div class="card-header" id="headingFive">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                                            Mobile
-                                                        </button>
-                                                    </h5>
-                                                </div>
-                                                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-bs-parent="#accordion">
-                                                    <div class="card-body">
-                                                        <ul class="ps-0 product-sidebar list-unstyled mb-0">
-                                                            <li><a href="#">Intex</a></li>
-                                                            <li><a href="#">Google</a></li>
-                                                            <li><a href="#">Samsung</a></li>
-                                                            <li><a href="#">Apple</a></li>
+                                                            <% categories.map( category => { %>
+                                                                <li onclick="filerCategory('<%=category._id%>')" id="filter-<%=category._id%>"><a><%=category.name%></a></li>
+                                                            <% }) %> 
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -451,7 +322,7 @@
                                                         out of stock   
                                                     <% } %>      
 
-                                                    </div><img src="/product/<%= product.productImage[0] %> " alt="hello">
+                                                    </div><img src="/product/<%=product.productImage[1]%> " alt="hello">
                                                 </a>
                                             </div>
                                             <div class="product-description" id="<%=product._id%>">
@@ -469,7 +340,11 @@
                                             <div class="product-buttons">
                                                 <ul class="ps-0" id=btn-group<%=product._id%> >
                                                     <li onclick="editDetails('<%=product._id%>' , '<%=product.productName%>', '<%=product.productColor%>' , '<%=product.productInStock%>' , '<%=product.productSize%>' , '<%=product.productCategory%>' , '<%=product.productPrize%>')"><a class="btn-link"  title="Edit"><i class="far fa-edit me-1"></i> Edit</a></li>
-                                                    <li id="delete-btn" data-id="<%=product.product_id%>" onclick=" deleteOne('<%=product.product_id %>')"><a class="btn-link" title="Delete"><i class="far fa-trash-alt me-1"></i> Delete</a></li>
+                                                    <%if(product.disable == true){%>
+                                                        <li id="delete-btn<%=product._id%>" onclick=" deleteOne('<%=product._id%>')"><a class="btn-link btn-danger" title="Delete"><i class="far fa-trash-alt me-1"></i>Enable</a></li>
+                                                    <% }else{ %> 
+                                                        <li id="delete-btn<%=product._id%>" onclick=" deleteOne('<%=product._id%>')"><a class="btn-link" title="Delete"><i class="far fa-trash-alt me-1"></i> Disable</a></li>
+                                                    <% } %> 
                                                 </ul>
                                             </div>
                                         </div>
@@ -901,8 +776,26 @@
             </div>
 
         </div>
-
     </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" >Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
     <!-- BUY TEMPLATE
     ================================================== -->
@@ -943,19 +836,37 @@
 
     <script>
     
-    function deleteOne(id){
-
-        $.ajax({
-            type:"DELETE",
-            url:`/admin/products/${id}`,
-            success: function(response){
-               window.location.reload()
-            } 
+    async function deleteOne(id){
+       const disableBtn = document.getElementById("delete-btn"+id) 
+       console.log(disableBtn)
+       try{
+        const res = await fetch("/admin/disable-product", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id})
         })
-        .then(() => {})
-        .catch( err => console.log(err))
-       
+        const data = await res.json()
+        console.log(data)
+        if(data.data == true){
+         disableBtn.innerHTML = `<a class="btn-link btn-danger" title="Delete"><i class="far fa-trash-alt me-1"></i>Enable</a>`
+        }else{
+         disableBtn.innerHTML = `<a class="btn-link" title="Delete"><i class="far fa-trash-alt me-1"></i>Disable</a>`
+        }
+       }
+       catch(err){
+        console.log(err)
+       }                                                                                                              
     }   
+
+    async function filerCategory(id){
+      const categoryBtn = document.getElementById("filter-"+id)
+      try{
+        const res = await fetch("/admin/filter-category")
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
     </script>
     <script src="/js/edit.js"></script>
 

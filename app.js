@@ -5,7 +5,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require("body-parser")
-
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
 const mongoose = require("mongoose");
@@ -35,6 +34,7 @@ mongoose.connect(uri ,
 .catch((err) => console.log(err))
 
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -54,7 +54,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.listen(4004 ,  () => {
+app.listen(5000,  () => {
   console.log("hello server started")
 })
 

@@ -2,10 +2,12 @@ const category = require("../models/category");
 const Products = require("../models/adminProduct");
 const Category = require("../models/category");
 const Coupons = require("../models/coupon");
-const User = require("../models/user")
-const Order = require("../models/order")
+const User = require("../models/user");
+const Order = require("../models/order");
+const userAddress = require("../models/userAddress");
 const jwt = require("jsonwebtoken");
 const randomId = require("random-id");
+const order = require("../models/order");
 const len = 10;
 const pattern = "aA0";
 const adminUserName = "sabir";
@@ -32,46 +34,70 @@ const handleErrors = (err) => {
       errors.name = "this category is already registered";
     }
   }
-  console.log(err);
   return errors;
 };
 
 module.exports = {
+
+  // GET signin page 
   admin_signIn: (req, res) => {
     res.render("adminsignup");
   },
+
+
+  // POST signin details
   admin_post: (req, res) => {
     console.log("we will post");
     const { userName, password } = req.body;
     if (adminUserName === userName && adminPassword == password) {
       const payload = { user: adminUserName };
-      const adminToken = jwt.sign(payload, process.env.secret, {expiresIn: "24h"});
+      const adminToken = jwt.sign(payload, process.env.secret, {
+        expiresIn: "24h",
+      });
       res.cookie("adminToken", adminToken);
       res.json({ message: "success" });
     } else {
       res.json({ message: "invalid user name or password" });
     }
   },
+
+
+  // logout admin 
   logout: (req, res) => {
     res.cookie("adminToken", "", { maxAge: 1 });
     res.redirect("/admin/signin");
   },
-  admin_get: (req, res) => {
-    res.render("adminHome");
+
+
+  // GET admin homepage
+  admin_get: async (req, res) => {
+    try{
+
+      const newOrders = await order.find({}).sort({created:-1}).limit(5)
+      res.render("adminHome",{newOrders});
+    }
+    catch(err){
+      console.log(err)
+    }
+    
   },
 
+
+  // GET category page
   adminCategory_get: async (req, res) => {
     const result = await category.find({});
     res.render("adminCategory", { result });
   },
 
+
+  // GET add category page 
   adminAddCategory_get: (req, res) => {
     res.render("adminAddCategory");
   },
 
+
+  // POST catergory details 
   adminAddCategory_post: async (req, res) => {
-    console.log(req.body.categoryname);
-    console.log(req.file);
     try {
       const categoryDetails = new category({
         name: req.body.categoryname,
@@ -79,44 +105,63 @@ module.exports = {
       });
 
       const result = await categoryDetails.save();
-      res.status(200).json({data:"ok"})
+      res.status(200).json({ data: "ok" });
     } catch (e) {
       const error = handleErrors(e);
       res.status(400).json({ error });
     }
   },
 
-  disableCategory: async (req , res) => {
-     const disableCategory =  await Category.findOneAndUpdate({_id:req.body.id},[{$set:{disable:{$not:"$disable"}}}])
-     res.status(200).json({data:disableCategory.disable})
+
+
+  // POST disabling category 
+  disableCategory: async (req, res) => {
+    const disableCategory = await Category.updateOne(
+      { _id: req.body.id },
+      [{ $set: { disable: { $not: "$disable" } } }],
+      { upsert: true }
+    );
+    const category = await Category.findOne({ _id: req.body.id });
+    res.status(200).json({ data: category.disable });
   },
 
+
+
+  // GET product page 
   adminProducts_get: async (req, res) => {
     const result = await Products.find({});
-    res.render("adminProducts", { products: result });
+    const categories = await Category.find({ disable: false });
+    res.render("adminProducts", { products: result, categories });
   },
 
+
+  // GET product detail page 
   adminProductDetails_get: (req, res) => {
     res.render("adminProductDetail");
   },
 
+
+
+  // GET product page 
   adminAddProduct_get: async (req, res) => {
-    const result = await category.find({});
-    console.log(result);
-    console.log("yes you are on there");
+    const result = await category.find({ disable: false });
     res.render("adminAddProducts");
   },
 
-  adminProductDetails_get: (req, res) => {
+  adminProductDetails_get: async (req, res) => {
     res.render("adminProductDetail");
   },
 
+
+  // GET add product page 
   adminAddproducts_get: async (req, res) => {
-    const result = await category.find({disable:false});
-    console.log(result)
+    const result = await category.find({ disable: false });
     res.render("adminAddProducts", { category: result });
   },
 
+
+
+  // POST product details 
   adminAddproduct_post: async (req, res) => {
     try {
       const product = new Products({
@@ -138,53 +183,79 @@ module.exports = {
     }
   },
 
+
+
+  // GET orders page
   adminOrders_get: async (req, res) => {
-
-    try{
-      const orders = await Order.find({}).populate("user").populate("products")
-      res.render("adminOrders" , {orders});
+    try {
+      const orders = await Order.find({}).populate("user").populate("products");
+      res.render("adminOrders", { orders });
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-   
   },
 
+
+  // GET order detail page 
   adminOrderDetails_get: async (req, res) => {
-    const orderDetails = await Order.findById(req.params.id).populate("user").populate("products.product")
-    console.log(orderDetails)
-    res.render("adminOrderDetails" , {orderDetails});
+    try {
+      const orderDetails = await Order.findById(req.params.id)
+        .populate("user")
+        .populate("products.product");
+      const user = orderDetails.user._id;
+      res.render("adminOrderDetails", { orderDetails });
+    } catch (err) {
+      console.log(err);
+    }
   },
 
+
+
+  // POST  update order status
+  orderStatus: async (req, res) => {
+    try {
+      const orderStatus = await Order.updateMany(
+        { _id: req.body.id },
+        { $set: { status: req.body.status } },
+        { upsert: true }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+
+  // GET customers page 
   adminCustomers_get: async (req, res) => {
-
-    try{
-      const users = await User.find({})
-      res.render("adminCustomers" ,{users});
+    try {
+      const users = await User.find({});
+      const orders = await order.find({});
+      res.render("adminCustomers", { users });
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-
-    
   },
 
-  customer_status: async (req , res) => {
-    let {id, status} = req.body
-    console.log(typeof status)
 
-    try{
-      const updateStatus = await User.findOneAndUpdate({_id:id} , {$set:{status:!status}} , {new:true})
-      console.log(updateStatus)
-      res.json({message:"success"})
+
+  //  POST updating customer status 
+  customer_status: async (req, res) => {
+    const { id } = req.body;
+    try {
+      const changeStatus = await User.updateOne(
+        { _id: id },
+        [{ $set: { status: { $not: "$status" } } }],
+        { upsert: true }
+      );
+      const status = await User.findOne({ _id: id });
+      res.status(200).json({ status: status.status });
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-    
-    
   },
 
+
+  //GET coupon page 
   adminCoupon_get: async (req, res) => {
     try {
       const coupons = await Coupons.find({});
@@ -194,6 +265,9 @@ module.exports = {
     }
   },
 
+
+
+  // GET create coupon page 
   adminCreateCoupon_get: async (req, res) => {
     try {
       res.render("adminCreateCoupon");
@@ -202,6 +276,8 @@ module.exports = {
     }
   },
 
+
+  // POST create new coupon 
   adminCreateCoupon_post: async (req, res) => {
     try {
       const coupon = new Coupons({
@@ -214,11 +290,7 @@ module.exports = {
         discountRate: req.body.DiscountRate,
       });
 
-      const result = await coupon.save((err) => {
-        if (err) {
-          console.log("this error occured in saving coupon document" + err);
-        }
-      });
+      const result = await coupon.save();
     } catch (err) {
       console.log(err);
     }
@@ -226,41 +298,70 @@ module.exports = {
     res.redirect("/admin/coupons");
   },
 
-  adminProduct_delete: (req, res) => {
-    Products.findOneAndDelete({ product_id: req.params.id }, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("document document deleted id :" + req.params.id);
-        res.json({ redirect: "/admin/products" });
-      }
-    });
+
+
+  // POST disabling products 
+  disableProduct: async (req, res) => {
+    const product = await Products.updateOne({ _id: req.body.id }, [
+      { $set: { disable: { $not: "$disable" } } },
+    ]);
+    const productUpdate = await Products.findOne({ _id: req.body.id });
+    res.status(200).json({ data: productUpdate.disable });
   },
+
+
+
+
+  // POST editing the product the details
   editProduct: async (req, res) => {
-    const {id , name, color , stock , size , category , price} = req.body
-    console.log(req.body)
-    try{
-     const updateProduct = await Products.updateMany({_id:id} ,{$set:{productName:name , productColor:color , productInStock:stock, productSize:size, productCategory:category , productPrize:price}}, {upsert:true})
-     const product = await Products.findOne({_id:id})
-     console.log(product)
-     console.log("we will do this")
+    const { id, name, color, stock, size, category, price } = req.body;
+    console.log(req.body);
+    try {
+      const updateProduct = await Products.updateMany(
+        { _id: id },
+        {
+          $set: {
+            productName: name,
+            productColor: color,
+            productInStock: stock,
+            productSize: size,
+            productCategory: category,
+            productPrize: price,
+          },
+        },
+        { upsert: true }
+      );
+      const product = await Products.findOne({ _id: id });
       res.status(200).json({
-        data:{
-        name:product.productName,
-        color:product.productColor,
-        availablity:product.productInStock,
-        size:product.productSize,
-        category:product.productCategory,
-        price:product.productPrize
-        }
-
-      })
-     }
-    catch(err){
-      console.log(err)
-      res.status(400).json({error:err.value , path:err.path})
+        data: {
+          name: product.productName,
+          color: product.productColor,
+          availablity: product.productInStock,
+          size: product.productSize,
+          category: product.productCategory,
+          price: product.productPrize,
+        },
+      });
+    } catch (err) {
+      res.status(400).json({ error: err.value, path: err.path });
     }
-  
+  },
 
-  }
+
+
+  // POST disabling the coupon 
+  disableCoupon: async (req, res) => {
+    const { id } = req.body;
+    try {
+      const coupon = await Coupons.updateOne(
+        { _id: id },
+        [{ $set: { status: { $not: "$status" } } }],
+        { upsert: true }
+      );
+      const couponStatus = await Coupons.findOne({ _id: id });
+      res.status(200).json({ data: couponStatus.status });
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };

@@ -46,68 +46,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="index.html">
-                <img src="../img/logos/logo-footer.png" alt="...">
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li>
-                            <a href="/admin"> <i class="menu-icon icon-home4"></i><span>Dashboard</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-inbox"></i><span>Category</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/category">Category</a></li>
-                                <li><a href="/admin/addcategory">Add Categories</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-layers"></i><span>Products</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/products">Products</a></li>
-                                <li><a href="/admin/product-details">Product Details</a></li>
-                                <li><a href="product-cart.html">Product Cart</a></li>
-                                <li><a href="/admin/add-product">Add Products</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-flash_on"></i><span>Orders</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/orders">Orders</a></li>
-                                <li><a href="/admin/order-details">Order Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/admin/customers"> <i class="menu-icon icon-code"></i><span>Customers</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-format_list_bulleted"></i><span>Coupons</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/coupons">Coupons</a></li>
-                                <li><a href="/admin/create-coupons">Create Coupons</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-divider"></li>
-                        <li>
-                            <a href="#"> <i class="menu-icon icon-public"></i><span>Logout</span> </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+        <%-include("./partials/adminsidebar.ejs")  %>
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -222,11 +161,11 @@
                                             <div class="col-md-12 mb-2">
                                                 <div class="form-group">
                                                     <label for="validationCustom01">Status</label>
-                                                    <select class="form-select form-control" id="validationCustom01" aria-label="Default select example">
-                                                        <option selected>Pending Payment</option>
-                                                        <option value="1">Processing</option>
-                                                        <option value="2">Completed</option>
-                                                        <option value="3">Cancelled </option>
+                                                    <select class="form-select form-control" id="validationCustom01" aria-label="Default select example" onchange="statusChange('<%=orderDetails._id%>')">
+                                                        <option value="order confirmed">order confirmed</option>
+                                                        <option value="packing">packing</option>
+                                                        <option value="shipped">shipped</option>
+                                                        <option value="delivered">delivered</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -272,16 +211,17 @@
                                         <div class="col-lg-auto ps-xl-5">
                                             <h6 class="fw-bold text-uppercase mb-3">shipping</h6>
                                             <ul class="list-unstyled ps-0">
-                                                <li><%=orderDetails.userAddress[0].streetAdress %> </li>
-                                                <li><%= orderDetails.userAddress[0].postcode%> </li>
-                                                <li><%=orderDetails.userAddress[0].city%> </li>
-                                                <li><%=orderDetails.userAddress[0].state  %> </li>
-                                                <li><%=orderDetails.userAddress[0].country  %> </li>
+                                                <li><%=orderDetails.address.name %> </li>
+                                                <li><%= orderDetails.address.street %></li>
+                                                <li><%= orderDetails.address.postcode%> </li>
+                                                <li><%=orderDetails.address.city%> </li>
+                                                <li><%=orderDetails.address.state%> </li>
+                                                <li><%=orderDetails.address.country  %> </li>
                                             </ul>
                                             <strong class="d-block">Email address:</strong>
-                                            <a href="#"><%=orderDetails.userAddress[0].email%> </a>
+                                            <a href="#"> <%=orderDetails.user.email%></a>
                                             <strong class="d-block mt-3">Phone:</strong>
-                                            <a href="#5551234"><%=orderDetails.userAddress[0].phoneNumber  %> </a>
+                                            <a href="#5551234"><%=orderDetails.address.mobile%> </a>
                                         </div>
                                     </div>
                                 </div>
@@ -370,16 +310,15 @@
                                             <tr>
                                                 <th scope="row">Address:</th>
                                                 <td>
-                                                    <%= orderDetails.userAddress[0].postcode%> 
-                                                    <%= orderDetails.userAddress[0].streetAdress%>
-                                                    <%= orderDetails.userAddress[0].city%> 
-                                                    <%= orderDetails.userAddress[0].state%> 
-                                                    <%= orderDetails.userAddress[0].country%> 
+                                                  <%= orderDetails.address.street  %>
+                                                  <%= orderDetails.address.city  %>
+                                                  <%= orderDetails.address.state  %>
+                                                  <%= orderDetails.address.postcode  %>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Phone :</th>
-                                                <td><%= orderDetails.userAddress[0].phoneNumber%> </td>
+                                                <td><%=orderDetails.address.mobile%> </td>
                                             </tr>
                                             <!-- <tr>
                                                 <th scope="row">Mobile :</th>
@@ -633,7 +572,24 @@
         </div>
 
     </div>
-
+     
+    <script>
+        const select = document.getElementById("validationCustom01");
+        async function statusChange(id){
+          console.log(select.value)
+          console.log(id)
+          try{
+            const res = await fetch("/admin/order-status" , {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({status:select.value , id})
+          }) 
+          } 
+          catch(err){
+            console.log(err)
+          }
+        }
+    </script> 
     <!-- BUY TEMPLATE
     ================================================== -->
     <div class="buy-theme alt-font d-none d-lg-inline-block"><a href="https://wrapbootstrap.com/theme/smartshop-multipurpose-ecommerce-template-WB0N7CT4D" target="_blank"><i class="fas fa-cart-plus"></i><span>Buy Template</span></a></div>

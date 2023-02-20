@@ -41,68 +41,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="index.html">
-                <img src="../img/logos/logo-footer.png" alt="...">
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li>
-                            <a href="/admin"> <i class="menu-icon icon-home4"></i><span>Dashboard</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-inbox"></i><span>Category</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/category">Category</a></li>
-                                <li><a href="/admin/addcategory">Add Categories</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-layers"></i><span>Products</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/products">Products</a></li>
-                                <li><a href="/admin/product-details">Product Details</a></li>
-                                <li><a href="product-cart.html">Product Cart</a></li>
-                                <li><a href="/admin/add-product">Add Products</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-flash_on"></i><span>Orders</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/orders">Orders</a></li>
-                                <li><a href="/admin/order-details">Order Details</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="/admin/customers"> <i class="menu-icon icon-code"></i><span>Customers</span> </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="menu-icon icon-format_list_bulleted"></i><span>Coupons</span><i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul>
-                                <li><a href="/admin/coupons">Coupons</a></li>
-                                <li><a href="/admin/create-coupons">Create Coupons</a></li>
-                            </ul>
-                        </li>
-                        <li class="menu-divider"></li>
-                        <li>
-                            <a href="#"> <i class="menu-icon icon-public"></i><span>Logout</span> </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+        <%-include("./partials/adminsidebar.ejs") %>    
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -248,11 +187,10 @@
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Customer</th>
                                                 <th scope="col">Contacts</th>
-                                                <th scope="col">Total Orders</th>
+                                                <!-- <th scope="col">Total Orders</th> -->
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Total Amount</th>
                                                 <th scope="col">Joining Date</th>
-                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -261,9 +199,6 @@
                                                     <th scope="row"><%= index+1  %> </th>
                                                     <td>
                                                         <div class="d-flex align-items-center">
-                                                            <div class="me-4">
-                                                                <img src="img/avatars/avatar-01.jpg" class="rounded-circle" alt="...">
-                                                            </div>
                                                             <div>
                                                                 <h6><%= user.userName %> </h6>
                                                                 <span><%= user.email  %> </span>
@@ -271,8 +206,8 @@
                                                         </div>
                                                     </td>
                                                     <td><%= user.phoneNumber  %> </td>
-                                                    <td>12</td>
-                                                    <td id="status" onclick="changeStatus('<%=user._id%>' , '<%=user.status%>')">
+                                                    <!-- <td></td> -->
+                                                    <td id="status-<%=user._id%>" onclick="changeStatus('<%=user._id%>')">
                                                         <% if(user.status){ %> 
                                                             <span class="badge rounded-pill bg-soft-green" id="active">Active</span>
                                                         <% }else { %>
@@ -281,14 +216,6 @@
                                                    </td>
                                                     <td>$2563</td>
                                                     <td><%=user.created.toUTCString()%> </td>
-                                                    <td>
-                                                        <a href="#" class="me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i class="far fa-edit text-primary"></i>
-                                                        </a>
-                                                        <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i class="far fa-trash-alt text-danger"></i>
-                                                        </a>
-                                                    </td>
                                                 </tr>
                                             <% }) %>     
                                             <!-- <tr>
@@ -737,31 +664,29 @@
     <!-- ALL JS INCLUDE
     ================================================== -->
     <script>
-        const status = document.querySelector("#status")
-        async function changeStatus(id , status){
-        let newStatus;
-        console.log(typeof status , status)    
-        if(status == true){
-            newStatus = false
-        }else {
-            newStatus = true
-        }
-          console.log(newStatus)
-          try{
+        
+        async function changeStatus(id){
+        const status = document.getElementById("status-"+id)    
+          if(confirm("are you sure to block this user")){
+              try{
             const res = await fetch("/admin/customers" , {
                 method:"POST",
-                body:JSON.stringify({id , status:newStatus}),
+                body:JSON.stringify({id}),
                 headers:{"Content-Type":"application/json"}
             })
             const data = await res.json()
             console.log(data)
-
-            if(data.message.includes("success")){
-                location.assign('/admin/customers')
+            if(data.status){
+             status.innerHTML = ` <span class="badge rounded-pill bg-soft-green" id="active">Active</span>`
+            }else{
+             status.innerHTML = `<span class="badge rounded-pill bg-soft-pink" id="blocked">Blocked</span>`
             }
+
+            
           }
           catch(err){
             console.log(err)
+          }
           }
         }
        

@@ -56,7 +56,7 @@ const storage = multer.diskStorage({
 
 
 var Upload = multer({ storage });
-const singleUploadErrorHandling = (req , res , next) => {
+const singleUploadErrorHandling = async (req , res , next) => {
   try{
     Upload.single("file")(req , res , function(err){
       if(err){
@@ -71,8 +71,24 @@ const singleUploadErrorHandling = (req , res , next) => {
   }
 }
 
+const multipleUploadErrorHandling =  async (req , res , next) => {
+  try{
+    multipleUpload.array("file" , 4)(req , res ,function(err){
+      if(err instanceof multer.MulterError){
+        console.log(err)
+        return res.status(400).json({errors:"maximum limit is four"})
+       
+      }
+      next()
+    })
+  }
+  catch{
+
+  }
+}
+
 
 module.exports = {
-    storages: multipleUpload,
+    multipleUploadErrorHandling,
     singleUploadErrorHandling
 }

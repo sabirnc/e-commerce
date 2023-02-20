@@ -74,21 +74,39 @@
             <div class="header-right">
                 <a href="/wishlist" class="wishlist-link">
                     <i class="icon-heart-o"></i>
-                    <span class="wishlist-count">3</span>
+                    <span class="wishlist-count">
+                      <%  %>
+                    </span>
                     <span class="wishlist-txt">My Wishlist</span>
                 </a>
 
                 <div class="dropdown cart-dropdown">
                     <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                         <i class="icon-shopping-cart"></i>
-                        <span class="cart-count"></span>
-                        <span class="cart-txt">$ 164,00</span>
+                        <span class="cart-count">
+                            <% if(cart != null){ %>
+                                <% if(cart.item != null){ %>
+                                    <%=cart.item.length%>
+                                <% }else{ %> 
+                                    0  
+                                <% } %>
+                            <% }else{%>
+                                0
+                            <% } %>
+                        </span>
+                        <span class="cart-txt">
+                            <%if(cart != null){%>
+                                $<%=cart.total%>
+                            <% }else{ %>
+                                $ 0
+                            <% } %>
+                        </span>
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right">
                         <div class="dropdown-cart-products">
-                            <% if(cart[0]){ %> 
-                                <% cart[0].item.map( (item, index) => {  %> 
+                            <% if(cart != null){ %> 
+                                <% cart.item.map( (item, index) => {  %> 
                                     <div class="product">
                                         <div class="product-cart-details">
                                             <h4 class="product-title">
@@ -103,10 +121,10 @@
 
                                         <figure class="product-image-container">
                                             <a href="product.html" class="product-image">
-                                                <img src="/product/<%=item.product.productImage[0]  %> " alt="product">
+                                                <img src="/product/<%=item.product.productImage[0]%> " alt="product">
                                             </a>
                                         </figure>
-                                        <a  onclick="deleteItem('<%=item.product._id%>' , '<%=item.quantity%>' , '<%=item.totalPrice%>')" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                
                                     </div>
                                    <% }) %>
                             <% }else { %> 
@@ -137,7 +155,15 @@
                         <div class="dropdown-cart-total">
                             <span>Total</span>
 
-                            <span class="cart-total-price">$160.00</span>
+                            <span class="cart-total-price">
+                                <% if(cart != null){ %> 
+                                    <% if(cart.item != null){ %> 
+                                       $ <%= cart.total  %> 
+                                    <% } %> 
+                                <% }else{ %>
+                                   $ 0 
+                                <% } %> 
+                            </span>
                         </div><!-- End .dropdown-cart-total -->
                         <div class="dropdown-cart-action">
                             <a href="/cart" class="btn btn-primary">View Cart</a>

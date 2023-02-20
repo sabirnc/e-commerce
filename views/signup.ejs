@@ -195,6 +195,7 @@
               }
             })
             const data = await res.json()
+            console.log(data)
             if(data.error){
               fullNameError.textContent = data.error.fullName
               userNameError.textContent = data.error.userName
