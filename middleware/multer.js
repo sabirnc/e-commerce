@@ -12,7 +12,6 @@ const storages = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    console.log(file)
     cb(null, file.originalname);
   },
 });
@@ -46,10 +45,8 @@ const multipleUpload = multer({
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, "./public/images");
-      console.log(file)
     },
     filename: (req, file, cb) => {
-      console.log(file);
       cb(null, file.originalname);
     },
 });
@@ -60,7 +57,6 @@ const singleUploadErrorHandling = async (req , res , next) => {
   try{
     Upload.single("file")(req , res , function(err){
       if(err){
-        console.log("hello multer")
         return res.status(400).json({error:"please upload a image"})
       }
       next()
@@ -75,9 +71,7 @@ const multipleUploadErrorHandling =  async (req , res , next) => {
   try{
     multipleUpload.array("file" , 4)(req , res ,function(err){
       if(err instanceof multer.MulterError){
-        console.log(err)
         return res.status(400).json({errors:"maximum limit is four"})
-       
       }
       next()
     })

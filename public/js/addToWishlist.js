@@ -1,4 +1,3 @@
-console.log("adding to wishlist")
 
 async function  addToWishlist(id){ 
   const res = await fetch("/addToWishlist", {
@@ -15,7 +14,6 @@ async function  addToWishlist(id){
 }
 
 async function deleteProduct (id) {
-  console.log(id)   
   const res = await fetch("/delete-product" , {
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -23,7 +21,6 @@ async function deleteProduct (id) {
   })
 
   const data = await res.json()
-  console.log(data)
   if(data.message == "Ok"){
     location.reload()
   }

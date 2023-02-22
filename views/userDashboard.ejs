@@ -30,6 +30,12 @@
 </head>
 
 <body>
+    <style>
+        .order{
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: .5em 0;
+        }
+    </style>
     <div class="page-wrapper">
         <!-- End .header -->
         <%-include("./partials/nav.ejs") %>
@@ -84,14 +90,14 @@
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                    <div class="tab-pane fade " id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
 								    	<% if(orders == null){ %> 
                                         <p>No order has been made yet.</p>
 								    	<a href="/shop" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
                                         <% }else{ %> 
+                                            <div class="row" style="margin: .5em;" >
                                              <% orders.map( order => { %> 
-                                                <div class="row order" >
-                                                    <div class="col-sm-6">
+                                                    <div class="col-sm-6 order">
                                                       <div class="card">
                                                         <div class="card-body">
                                                           <h5 class="card-title"> order id : <%= order.orderId%></h5>
@@ -103,10 +109,11 @@
                                                         </div>
                                                       </div>
                                                     </div>
-                                                </div>
-                                             <% }) %>    
+                                             <% }) %>  
+                                            </div>   
                                         <% } %> 
-								    </div><!-- .End .tab-pane -->
+								    </div>
+                                   
 
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -324,14 +331,12 @@
     </div><!-- End .modal -->
     <script>
         const div = document.getElementById("tab-orders")
-        console.log(div)
         async function displayOrder(id){
           const res = await fetch(`/orders?id=${id}`, {
             method:"GET",
             headers:{"Content-Type":"application/json"},
           })
           const data = await res.json()
-          console.log(data.orders)
           if(data.orders.length  < 1){
             div.innerHTML = `<p>No order has been made yet.</p>
 							<a href="/shop" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>`

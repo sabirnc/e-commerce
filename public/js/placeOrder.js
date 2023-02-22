@@ -14,8 +14,6 @@ function openModal() {
 
 let detail;
 const radio = document.getElementsByName("select");
-console.log(radio)
-
 function selectAddress(
   firstName,
   streetadress,
@@ -55,7 +53,6 @@ async function placeOrder(cart) {
       }
     }
     if (addressSelected) {
-      console.log("checked")
       const res = await fetch("place-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,7 +60,6 @@ async function placeOrder(cart) {
       });
 
       const data = await res.json();
-      console.log(data);
       if (data.message) {
         openModal();
       }
@@ -91,7 +87,6 @@ async function cancelOrder(id) {
     });
 
     const data = await res.json();
-    console.log(data);
     if (data.message) {
       location.reload();
     }

@@ -103,7 +103,7 @@
                                                     <td class="price-col">$ <%= item.product.productPrize%></td>
                                                     <td class="quantity-col">
                                                     <div class="cart-product-quantity quantity" >
-                                                        <span class="material-symbols-outlined add" onclick="decrement('<%=item.quantity%>' ,'<%=item.product._id%>', '<%=index%>')">
+                                                        <span class="material-symbols-outlined add" onclick="decrement('<%=item.quantity%>' ,'<%=item.product._id%>', '<%=index%>', '<%=cart.total%>')">
                                                             remove
                                                         </span>
                                                          <%= item.quantity %>
@@ -378,7 +378,6 @@
                     
                 })
                 const data = await res.json()
-                console.log(data)
                 if(data.message.includes("success")){
                      location.reload()
                 }

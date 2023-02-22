@@ -422,7 +422,6 @@
     </div><!-- End .modal -->
     <script>
          async function deleteItem(id , qty , total){
-            console.log(id , qty , total)
             try{
                 const res = await fetch("/delete-item" , {
                     method:"DELETE",
@@ -432,7 +431,6 @@
                 })
 
                 const data = await res.json()
-                console.log(data)
                 if(data.message.includes("success")){
                     location.reload()
                 }

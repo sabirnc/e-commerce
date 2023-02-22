@@ -271,14 +271,6 @@
                                                 <b>$<%=orderDetails.total  %> </b>
                                             </span>
                                         </div>
-                                        <!-- <div class="col-auto me-5">
-                                            <h6 class="fw-bold mb-2">Shipping</h6>
-                                            <span class="d-flex align-items-center">
-                                                Flat Rate
-                                                <i class="fas fa-chevron-right f-s-11 text-primary px-3"></i>
-                                                <b>$20.00</b>
-                                            </span>
-                                        </div> -->
                                         <div class="col-auto">
                                             <h6 class="fw-bold mb-2">Order Total</h6>
                                             <span class="d-flex align-items-center justify-content-lg-end">
@@ -320,10 +312,6 @@
                                                 <th scope="row">Phone :</th>
                                                 <td><%=orderDetails.address.mobile%> </td>
                                             </tr>
-                                            <!-- <tr>
-                                                <th scope="row">Mobile :</th>
-                                                <td>(+01) 12345 67890</td>
-                                            </tr> -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -576,8 +564,6 @@
     <script>
         const select = document.getElementById("validationCustom01");
         async function statusChange(id){
-          console.log(select.value)
-          console.log(id)
           try{
             const res = await fetch("/admin/order-status" , {
             method:"POST",

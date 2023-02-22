@@ -162,7 +162,7 @@ module.exports = {
         .limit(4);
       res.render("homepage", { newArrivals, cart });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -177,7 +177,7 @@ module.exports = {
       );
       res.render("shop", { shopProduct, cart, category });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({message:err.message})
     }
   },
 
@@ -189,7 +189,7 @@ module.exports = {
       );
       res.render("blog", { cart });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -201,7 +201,7 @@ module.exports = {
       );
       res.render("about", { cart });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -217,7 +217,7 @@ module.exports = {
         .populate("products.product");
       res.render("wishlist", { cart, Wishlist });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -234,7 +234,7 @@ module.exports = {
         res.render("cart", { cart });
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -305,7 +305,7 @@ module.exports = {
       const cart = await Cart.findOne({ owner: req.userId });
       res.json({ message: "success" });
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -326,7 +326,7 @@ module.exports = {
         res.render("checkout", { cart, address: address.UserAddress, users });
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).json({err:err.message})
     }
   },
 
@@ -357,7 +357,7 @@ module.exports = {
         res.status(200).json({ newCart });
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -365,18 +365,22 @@ module.exports = {
   decrement: async (req, res) => {
     try {
       const user = req.userId;
-      if (req.body.qty <= 1) {
+      if (req.body.qty < 1) {
         res.status(200).json("delete product");
       } else {
         const product = await Products.findOne({ _id: req.body.productId });
         const cart = await Cart.updateMany(
-          { owner: user, "item.product": req.body.productId },
+          { owner: user, "item.product": req.body.productId},
           {
-            $inc: {
-              "item.$.quantity": -req.body.count,
-              "item.$.totalPrice": -req.body.count * product.productPrize,
-              total: -req.body.count * product.productPrize,
+            $set: {
+              "item.$.quantity": req.body.qty,
+              "item.$.totalPrice": req.body.qty * product.productPrize,
             },
+           $inc:{
+            total:-req.body.count * product.productPrize
+           }
+            
+            
           }
         );
         const newCart = await Cart.findOne({ owner: user }).populate(
@@ -385,23 +389,25 @@ module.exports = {
         res.status(200).json({ newCart });
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
   // GET product detail page
   productDetail_get: async (req, res) => {
     try {
+      
       const productDetail = await products.findOne({
         product_id: req.params.id,
       });
+      const mayLike = await products.find({productCategory:productDetail.productCategory}).limit(4)
       if (productDetail) {
-        res.render("product-details", { productDetail });
+        res.render("product-details", { productDetail  , mayLike});
       } else {
         res.redirect("/");
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -554,9 +560,8 @@ module.exports = {
         );
         res.status(200).json({ message: "success" });
       }
-    } catch (err) {
+    }catch (err) {
       const orderError = handleOrderErrors(err);
-      console.log(orderError);
       res.status(400).json({ orderError });
     }
   },
@@ -568,7 +573,7 @@ module.exports = {
       const cancelOrder = await order.deleteOne({ _id: id });
       res.status(200).json({ message: "oK" });
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -582,7 +587,7 @@ module.exports = {
       const address = await userAddress.findOne({ user: req.userId });
       res.render("userDashboard", { cart, orders, address });
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -635,7 +640,7 @@ module.exports = {
       );
       res.status(200).json({ message: "oK" });
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -647,7 +652,7 @@ module.exports = {
       });
       res.json({ data: product, user: req.userId });
     } catch (err) {
-      console.log(err);
+       res.status(400).res.json({err:err.message})
     }
   },
 
@@ -682,7 +687,7 @@ module.exports = {
         }
       }
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -697,7 +702,7 @@ module.exports = {
       );
       res.status(200).json({ message: "Ok" });
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -707,7 +712,7 @@ module.exports = {
       const orders = await order.find({ user: req.query.id });
       res.status(200).json({ orders });
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -749,9 +754,8 @@ module.exports = {
       });
       const order = await paypalClient.execute(request);
       res.json({ id: order.result.id });
-      console.log(order.result.id);
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
@@ -775,21 +779,19 @@ module.exports = {
         },
         { $sort: { _id: 1 } }
       ])
-      console.log(eachday)
       res.json({eachday});
     } catch (err) {
-      console.log(err);
+      res.status(400).res.json({err:err.message})
     }
   },
 
   invoice: async (req , res) => {
    try{
     const invoice = await order.findOne({_id:req.params.id}).populate("user").populate("products.product")
-    console.log(invoice)
     res.render("invoice" ,{invoice})
    }
    catch(err){
-    console.log(err)
+    res.status(400).res.json({err:err.message})
    }
    
   },

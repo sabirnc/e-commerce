@@ -8,11 +8,21 @@ const userAddress = require("../models/userAddress");
 const jwt = require("jsonwebtoken");
 const randomId = require("random-id");
 const order = require("../models/order");
+const cloudinary = require("cloudinary").v2
 const len = 10;
 const pattern = "aA0";
 const adminUserName = "sabir";
 const adminPassword = "1234";
 
+// configuring cloudinary 
+cloudinary.config({ 
+  cloud_name: 'dkoczwl2d', 
+  api_key: '658853366911788', 
+  api_secret: '7R26H5ToEac-dAEMc7OfGeYmtxg',
+  secure: true 
+});
+
+// handling errors
 const handleErrors = (err) => {
   const errors = {
     name: "",
@@ -47,7 +57,6 @@ module.exports = {
 
   // POST signin details
   admin_post: (req, res) => {
-    console.log("we will post");
     const { userName, password } = req.body;
     if (adminUserName === userName && adminPassword == password) {
       const payload = { user: adminUserName };
@@ -72,12 +81,11 @@ module.exports = {
   // GET admin homepage
   admin_get: async (req, res) => {
     try{
-
       const newOrders = await order.find({}).sort({created:-1}).limit(5)
       res.render("adminHome",{newOrders});
     }
     catch(err){
-      console.log(err)
+      res.json({err:err.message})
     }
     
   },
@@ -164,6 +172,12 @@ module.exports = {
   // POST product details 
   adminAddproduct_post: async (req, res) => {
     try {
+      const urlList = []
+      for(i=0;i<req.files.length; i++){
+        const upload =  await  cloudinary.uploader.upload(req.files[i].path , function(err , result){
+          urlList.push(result.url)
+        })
+      }
       const product = new Products({
         product_id: randomId(len, pattern),
         productName: req.body.productName,
@@ -172,6 +186,7 @@ module.exports = {
         productPrize: req.body.productPrize,
         productSize: req.body.productSize,
         productImage: req.files.map((file) => file.originalname),
+        urlList:urlList.map(file => file),
         productCategory: req.body.productCategory,
         lastUpdated: Date.now(),
       });
@@ -191,7 +206,7 @@ module.exports = {
       const orders = await Order.find({}).populate("user").populate("products");
       res.render("adminOrders", { orders });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -205,7 +220,7 @@ module.exports = {
       const user = orderDetails.user._id;
       res.render("adminOrderDetails", { orderDetails });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -220,7 +235,7 @@ module.exports = {
         { upsert: true }
       );
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -232,7 +247,7 @@ module.exports = {
       const orders = await order.find({});
       res.render("adminCustomers", { users });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -250,7 +265,7 @@ module.exports = {
       const status = await User.findOne({ _id: id });
       res.status(200).json({ status: status.status });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -261,7 +276,7 @@ module.exports = {
       const coupons = await Coupons.find({});
       res.render("adminCoupon", { coupons });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 
@@ -272,7 +287,7 @@ module.exports = {
     try {
       res.render("adminCreateCoupon");
     } catch (err) {
-      console.log(err);
+     res.json({err:err.message})
     }
   },
 
@@ -292,7 +307,7 @@ module.exports = {
 
       const result = await coupon.save();
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
 
     res.redirect("/admin/coupons");
@@ -315,7 +330,6 @@ module.exports = {
   // POST editing the product the details
   editProduct: async (req, res) => {
     const { id, name, color, stock, size, category, price } = req.body;
-    console.log(req.body);
     try {
       const updateProduct = await Products.updateMany(
         { _id: id },
@@ -361,7 +375,7 @@ module.exports = {
       const couponStatus = await Coupons.findOne({ _id: id });
       res.status(200).json({ data: couponStatus.status });
     } catch (err) {
-      console.log(err);
+      res.json({err:err.message})
     }
   },
 };

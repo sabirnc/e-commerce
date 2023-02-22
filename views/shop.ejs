@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>Molla</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -118,8 +118,6 @@
 
                                                 <div class="product-action-vertical">
                                                     <a class="btn-product-icon btn-wishlist btn-expandable" onclick="addToWishlist('<%=product._id%>')"><span>add to wishlist</span></a>
-                                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
                                                 </div><!-- End .product-action-vertical -->
 
                                                 <div class="product-action" id="addToCart">
@@ -138,12 +136,6 @@
                                                 <div class="product-price">
                                                     <span class="out-price">$ <%= product.productPrize%> </span>
                                                 </div><!-- End .product-price -->
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 6 Reviews )</span>
-                                                </div><!-- End .rating-container -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 col-lg-4 -->
@@ -154,24 +146,6 @@
                                 </div><!-- End .row -->
                             </div><!-- End .products -->
 
-                			<nav aria-label="Page navigation">
-							    <ul class="pagination justify-content-center">
-							        <li class="page-item disabled">
-							            <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
-							                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
-							            </a>
-							        </li>
-							        <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-							        <li class="page-item"><a class="page-link" href="#">2</a></li>
-							        <li class="page-item"><a class="page-link" href="#">3</a></li>
-							        <li class="page-item-total">of 6</li>
-							        <li class="page-item">
-							            <a class="page-link page-link-next" href="#" aria-label="Next">
-							                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
-							            </a>
-							        </li>
-							    </ul>
-							</nav>
                 		</div><!-- End .col-lg-9 -->
                 		<aside class="col-lg-3 order-lg-first">
                 			<div class="sidebar sidebar-shop">
@@ -255,7 +229,6 @@
 
       
        async function deleteItem(id , qty , total){
-            console.log(id , qty , total)
             try{
                 const res = await fetch("/delete-item" , {
                     method:"DELETE",
@@ -265,7 +238,6 @@
                 })
 
                 const data = await res.json()
-                console.log(data)
                 if(data.message.includes("success")){
                     location.reload()
                 }
@@ -282,11 +254,9 @@
                  const res = fetch(`/filer-product?category=${this.id}`)
                  .then( response => response.json())
                  .then( data => { 
-                    console.log(data)
                     const filteredDiv = document.querySelector("#filtered")
                     filteredDiv.innerHTML = ""
                     if(data.data.length == 0){
-                        console.log("no item show ")
                         filteredDiv.innerHTML += "no item to show in selected category"
                     }
                     data.user
@@ -330,13 +300,7 @@
                                         </div>
                                     </div> `
                                     filteredDiv.innerHTML += html
-                    })
-
-                    
-                    
-                 
-                                    
-                    
+                    })                 
                  })
                }
                catch(err){

@@ -57,7 +57,6 @@ const saveBtn = document.createElement("button")
             btnGroup.insertBefore(editBtn,btnGroup.children[0])
         }
         if(data.error){
-          console.log(editError)
           editError.textContent = data.error + " value not allowed in path " + data.path
         }
        }catch(err){

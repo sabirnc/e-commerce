@@ -409,11 +409,9 @@
                 })
 
                 const data = await res.json()
-                console.log(data)
                 if(data.message){
                     couponError.textContent = data.message
                 }
-                console.log(data.coupons)
                 if(data.coupons){
                   location.reload()
                 }
@@ -431,7 +429,6 @@
                 headers:{"Content-type":"application/json"}
             })
             const data = await res.json()
-            console.log(data.coupon)
             if(data.message){
                 location.reload()
             }
@@ -448,7 +445,6 @@
     </script>
      <script>
         const radios = document.querySelector("#select")
-        console.log(radios)
         paypal.Buttons({
           // Order is created on the server and the order id is returned
             createOrder() {

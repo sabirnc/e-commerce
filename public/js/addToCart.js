@@ -1,8 +1,4 @@
 async function addToForm (productId, userId , productPrize){
-    console.log("clicking")
-    console.log(productId)
-    console.log(userId)
-    console.log(productPrize)
     const qty = 1
 
     try{
@@ -13,7 +9,6 @@ async function addToForm (productId, userId , productPrize){
         })
 
         const data = await res.json()
-        console.log(data)
         if(data.message.includes("success")){
            location.assign("/cart") 
         }

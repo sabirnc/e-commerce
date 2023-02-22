@@ -23,12 +23,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/' , usersRouter);
 app.use('/admin', adminRouter);
+app.get("*", (req , res) => {
+  res.render("404.ejs")
+})
 
 mongoose.connect(process.env.uri , 
   { useNewUrlParser: true, useUnifiedTopology: true }
 )
 .then( () => {
-    console.log("connected to db successfullly")
 })
 .catch((err) => console.log(err))
 
@@ -53,8 +55,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.listen(5000,  () => {
-  console.log("hello server started")
-})
+app.listen(3001)
 
 module.exports = app;

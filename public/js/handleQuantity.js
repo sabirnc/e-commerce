@@ -3,10 +3,8 @@ async function incrementQuantity(qty , productId , len){
   const cartProduct = document.getElementById("cart-item-"+productId)  
   const total = document.getElementById("total")
   const grandTotal = document.getElementById("grandtotal")
-  console.log(grandTotal)
   let count = 0
   count+=1
-  console.log(count)
   if(count >= 10){
     count =10
   }
@@ -20,11 +18,8 @@ async function incrementQuantity(qty , productId , len){
         body:JSON.stringify({qty ,count , productId})
     })
     const data = await res.json()
-    console.log(data)
-
     if(data.newCart){
       data.newCart.item.map( (product , index ) => {
-        console.log(product.product.product_id)
         if(index == len){
           cartProduct.innerHTML = 
           `
@@ -79,11 +74,18 @@ async function incrementQuantity(qty , productId , len){
 }
 
 async function decrement(qty , productId , len){
+let count = 1 
 const cartProduct = document.getElementById("cart-item-"+productId)  
 const total = document.getElementById("total")
 const grandTotal = document.getElementById("grandtotal")  
-  let count = 1
+  qty -= 1
+  
+  if(qty < 1){
+    qty = 1
+    count = 0
+  }
   try{
+    console.log("qty :" + qty)
     const res = await fetch("/decrement",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
@@ -91,8 +93,6 @@ const grandTotal = document.getElementById("grandtotal")
     })
 
     const data = await res.json()
-    console.log(data)
-
     if(data.newCart){
         data.newCart.item.map( (product , index ) => {
           if(index == len){

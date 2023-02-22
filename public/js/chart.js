@@ -1,15 +1,3 @@
-// const chart = new JSC.Chart("charts", {
-//     type: "column",
-//     series: [
-//       {
-//         name: "Teams",
-//         points: [
-//             { x: "A", y: 10 },
-//             { x: "B", y: 5 }
-//         ]
-//       }
-//     ]
-//   });
 
 JSC.fetch("/get-orders")
 .then(response => response.json())

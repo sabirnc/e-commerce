@@ -82,7 +82,6 @@ async function addAddress(){
       })
   
       const data = await res.json()
-      console.log(data)
       if(data.message ){
         location.reload()
       }
@@ -119,7 +118,6 @@ async function deleteAddress(id){
     })
 
     const data = await res.json()
-    console.log(data)
 
     if(data.message){
       location.reload()

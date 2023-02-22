@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userController = require("../controllers/userController");
 const jwt = require('../middleware/jwt');
-const {jwt_func , checkUser , ifLoged, checkStatus} = require("../middleware/jwt")
-
+const {jwt_func , checkUser , ifLoged, checkStatus , checkCart} = require("../middleware/jwt")
 /* GET users listing. */
 router.get('/',  checkUser ,userController.home_get)
 router.get("/login",ifLoged, userController.login_get)
@@ -17,8 +16,8 @@ router.get("/wishlist" ,checkStatus,checkUser,jwt_func, userController.wishList_
 router.get("/cart" ,checkStatus,checkUser, jwt_func, userController.cart_get)
 router.post("/cart", checkStatus, checkUser, jwt_func, userController.addToCart)
 router.post("/increment" , checkStatus , checkUser , jwt_func , userController.increment)
-router.post("/decrement", checkStatus , checkUser , jwt_func , userController.decrement)
-router.get("/checkout" ,checkStatus,checkUser ,jwt_func, userController.checkOut_get)
+router.post("/decrement", checkStatus , checkUser , jwt_func  , userController.decrement)
+router.get("/checkout" ,checkStatus,checkUser ,jwt_func,checkCart, userController.checkOut_get)
 router.post("/add-address", checkStatus , checkUser , jwt_func , userController.addAddress)
 router.post("/edit-address" , checkStatus , checkStatus , jwt_func , userController.editAddress)
 router.post("/delete-address", checkStatus , checkUser , jwt_func , userController.deleteAddress)

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Cart = require("../models/cart")
 module.exports = {
   jwt_func: (req, res, next) => {
     const token = req.cookies.token;
@@ -9,8 +10,6 @@ module.exports = {
       jwt.verify(token, process.env.secret, (err, decodedToken) => {
         if (err) {
           console.log(err.message);
-        } else {
-          console.log(decodedToken.id); 
         }
       });
     }
@@ -56,7 +55,6 @@ module.exports = {
 
   ifLoged: (req, res, next) => {
     const token = req.cookies.token;
-    console.log("check a user is loged in  ")
     if (token) {
       console.log("logged")
       jwt.verify(token, process.env.secret, async (err, decode) => {
@@ -83,13 +81,11 @@ module.exports = {
       jwt.verify(token , process.env.secret ,async (err,decode) => {
         if(err){
           next()
-          console.log(err.message)
           res.redirect("/login")
         }else{
           let user = await User.findOne({_id:decode.id})
           if(!user.status){
-            console.log("user status is false")
-             res.redirect("/login")
+            res.redirect("/login")
           }else{
             next()
           }
@@ -99,5 +95,26 @@ module.exports = {
       next()
     }
     
+  },
+
+  checkCart:(req, res , next) => {
+    const token = req.cookies.token
+    if(token){
+      jwt.verify(token , process.env.secret , async (err , decode) => {
+        if(err){
+          console.log(err)
+        }else{
+          const cart = await Cart.findOne({owner:decode.id})
+          if(cart == null){
+            res.redirect("/")
+          }
+          if(cart.item.length < 1){
+            res.redirect("/")
+          }else{
+            next()
+          }
+        }
+      })
+    }
   }
 };

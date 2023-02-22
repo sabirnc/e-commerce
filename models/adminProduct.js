@@ -33,6 +33,9 @@ const productSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  urlList:{
+    type:Array
+  },
   disable:{
     type:Boolean,
     default:false

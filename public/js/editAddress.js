@@ -1,6 +1,5 @@
 
 async function editAddress(id , name , streetAdress , phoneNumber ,city , state , country , postcode){
-console.log("clicking")    
 const div = document.getElementById("div") 
 const addressDetail = document.getElementById("addressDetail-"+id)
 const buttonGroup = document.getElementById("button-group-"+id)    
@@ -45,7 +44,6 @@ const editBtn = buttonGroup.children[0]
             body:JSON.stringify({id , name , streetAdress , phoneNumber , city , state , country , postcode})
         })
         const data = await res.json()
-        console.log(data)
         let html = ""
         if(data.user){
           div.innerHTML = ""
