@@ -378,4 +378,8 @@ module.exports = {
       res.json({err:err.message})
     }
   },
+
+  adminBanner:(req , res) => {
+    res.render("addBanner")
+  }
 };

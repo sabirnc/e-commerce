@@ -26,6 +26,7 @@ router.post("/edit-product" , adminAuth , adminController.editProduct)
 router.post("/disable-product",adminAuth, adminController.disableProduct)
 router.post("/order-status" , adminAuth , adminController.orderStatus)
 router.post("/disable-coupon", adminAuth , adminController.disableCoupon)
+router.get("/add-banner",adminAuth , adminController.adminBanner)
 router.get("/logout", adminController.logout)
 
 module.exports = router;
