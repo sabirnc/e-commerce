@@ -56,7 +56,6 @@ module.exports = {
   ifLoged: (req, res, next) => {
     const token = req.cookies.token;
     if (token) {
-      console.log("logged")
       jwt.verify(token, process.env.secret, async (err, decode) => {
         if (err) {
           console.log(err.message + "Logged");
@@ -79,20 +78,25 @@ module.exports = {
     const token = req.cookies.token
     if(token){
       jwt.verify(token , process.env.secret ,async (err,decode) => {
-        if(err){
-          next()
-          res.redirect("/login")
-        }else{
-          let user = await User.findOne({_id:decode.id})
-          if(!user.status){
+        try{
+          if(err){
+            next()
             res.redirect("/login")
           }else{
-            next()
+            let user = await User.findOne({_id:decode.id})
+            console.log(user)
+            if(!user.status){
+              res.redirect("/login")
+            }else{
+              next()
+            }
           }
+        }catch(err){
+          console.log(err)
         }
       })
     }else{
-      next()
+      res.send("invalid token pls login again ")
     }
     
   },

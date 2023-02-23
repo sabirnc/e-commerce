@@ -155,7 +155,6 @@ module.exports = {
       const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
-      console.log(cart);
       const newArrivals = await products
         .find({ disable: false })
         .sort({ lastUpdated: -1 })
@@ -168,7 +167,6 @@ module.exports = {
 
   // GET product page
   shop_get: async (req, res) => {
-    console.log(req.userId);
     try {
       const category = await Category.find({ disable: false });
       const shopProduct = await products.find({ disable: false });
@@ -524,7 +522,6 @@ module.exports = {
 
   // POST placing order
   placeOrder: async (req, res) => {
-    console.log(req.body);
     try {
       const user = req.userId;
       const cart = await Cart.findOne({ owner: user });
@@ -755,7 +752,7 @@ module.exports = {
       const order = await paypalClient.execute(request);
       res.json({ id: order.result.id });
     } catch (err) {
-      res.status(400).res.json({err:err.message})
+      res.status(400).res.json({error:err.message})
     }
   },
 
