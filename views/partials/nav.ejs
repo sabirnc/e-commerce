@@ -106,17 +106,17 @@
                                             <div class="product">
                                                 <div class="product-cart-details">
                                                     <h4 class="product-title">
-                                                        <a href="product.html"><%=item.product.productName%> </a>
+                                                        <a href="/product-detail/<%=item.product.product_id%>"><%=item.product.productName%> </a>
                                                     </h4>
                 
                                                     <span class="cart-product-info">
                                                         <span class="cart-product-qty"></span>
-                                                        <%=item.quantity  %>   x $ <%=item.product.productPrize%> 
+                                                        <%=item.quantity%>   x $ <%=item.product.productPrize%> 
                                                     </span>
                                                 </div><!-- End .product-cart-details -->
                 
                                                 <figure class="product-image-container">
-                                                    <a href="product.html" class="product-image">
+                                                    <a href="/product-detail/<%=item.product.product_id%>" class="product-image">
                                                         <img src="/product/<%=item.product.productImage[0]%> " alt="product">
                                                     </a>
                                                 </figure>

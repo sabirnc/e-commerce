@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:""
   },
+  profile:{
+    type:String
+  },
   created: {
     type: Date,
   },
@@ -60,7 +63,6 @@ userSchema.statics.login = async function (userName, password) {
   const user = await this.findOne({ userName });
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
-    console.log(user.status)
     if (auth) {
       if(user.status){
         return user;

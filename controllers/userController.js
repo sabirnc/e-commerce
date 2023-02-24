@@ -9,6 +9,9 @@ const Coupons = require("../models/coupon");
 const Category = require("../models/category");
 const wishlist = require("../models/whishlist");
 const userAddress = require("../models/userAddress");
+const banner = require("../models/banner")
+const {cloudinary} = require("./adminController")
+const bcrypt = require("bcrypt");
 const paypal = require("@paypal/checkout-server-sdk");
 const paypalClientId =
   "AWwuzZ4gloxezuQmOCAkDaqlhRJSdje_9L-gjIyKdU7CM_DHFr6Ir8T0jU3mHHoUkDKEKyRBUu1MRlc_";
@@ -151,7 +154,7 @@ module.exports = {
   // GET home page
   home_get: async (req, res) => {
     try {
-      console.log(req.userId);
+      const banners = await banner.find({selected:true})
       const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
@@ -159,7 +162,7 @@ module.exports = {
         .find({ disable: false })
         .sort({ lastUpdated: -1 })
         .limit(4);
-      res.render("homepage", { newArrivals, cart });
+      res.render("homepage", { newArrivals, cart ,banners });
     } catch (err) {
       res.status(400).json({err:err.message})
     }
@@ -182,7 +185,7 @@ module.exports = {
   // GET blog page
   blog_get: async (req, res) => {
     try {
-      const cart = await Cart.find({ owner: req.userId }).populate(
+      const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
       res.render("blog", { cart });
@@ -194,7 +197,7 @@ module.exports = {
   // GET about page
   about_get: async (req, res) => {
     try {
-      const cart = await Cart.find({ owner: req.userId }).populate(
+      const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
       res.render("about", { cart });
@@ -207,13 +210,13 @@ module.exports = {
   wishList_get: async (req, res) => {
     try {
       const user = req.userId;
-      const cart = await Cart.find({ owner: req.userId }).populate(
+      const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
       const Wishlist = await wishlist
         .findOne({ owner: user })
         .populate("products.product");
-      res.render("wishlist", { cart, Wishlist });
+      res.render("wishlist", {  Wishlist ,cart });
     } catch (err) {
       res.status(400).json({err:err.message})
     }
@@ -314,14 +317,14 @@ module.exports = {
         "AWwuzZ4gloxezuQmOCAkDaqlhRJSdje_9L-gjIyKdU7CM_DHFr6Ir8T0jU3mHHoUkDKEKyRBUu1MRlc_";
       const user = req.userId;
       const address = await userAddress.findOne({ user: user });
-      const cart = await Cart.find({ owner: req.userId })
+      const cart = await Cart.findOne({ owner: req.userId })
         .populate("owner")
         .populate("item.product");
       if (address == null) {
-        res.render("checkout", { cart, address: null });
+        res.render("checkout", {  address: null ,cart });
       } else {
         const users = await User.findOne({ _id: user });
-        res.render("checkout", { cart, address: address.UserAddress, users });
+        res.render("checkout", {  address: address.UserAddress, users , cart });
       }
     } catch (err) {
       res.status(400).json({err:err.message})
@@ -394,13 +397,13 @@ module.exports = {
   // GET product detail page
   productDetail_get: async (req, res) => {
     try {
-      
+      const cart = await Cart.findOne({owner:req.userId}).populate("item.product")
       const productDetail = await products.findOne({
         product_id: req.params.id,
       });
       const mayLike = await products.find({productCategory:productDetail.productCategory}).limit(4)
       if (productDetail) {
-        res.render("product-details", { productDetail  , mayLike});
+        res.render("product-details", { productDetail  , mayLike , cart});
       } else {
         res.redirect("/");
       }
@@ -577,12 +580,13 @@ module.exports = {
   // GET user dashboard page
   userDashboard: async (req, res) => {
     try {
-      const cart = await Cart.find({ owner: req.userId }).populate(
+      const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
       const orders = await order.find({ user: req.userId });
       const address = await userAddress.findOne({ user: req.userId });
-      res.render("userDashboard", { cart, orders, address });
+      const user = await User.findOne({_id:req.userId})
+      res.render("userDashboard", { cart, orders, address ,user });
     } catch (err) {
       res.status(400).res.json({err:err.message})
     }
@@ -752,7 +756,7 @@ module.exports = {
       const order = await paypalClient.execute(request);
       res.json({ id: order.result.id });
     } catch (err) {
-      res.status(400).res.json({error:err.message})
+      console.log(err)
     }
   },
 
@@ -788,9 +792,85 @@ module.exports = {
     res.render("invoice" ,{invoice})
    }
    catch(err){
-    res.status(400).res.json({err:err.message})
+    res.send(err.message)
+  
    }
    
+  },
+
+  uploadProfilePhoto: async (req , res) => {
+   
+    try{
+     let file
+     const upload =  await cloudinary.uploader.upload(req.file.path , function(err , result){
+      file = result.url
+     })
+     const update = await User.updateOne(
+      {_id:req.userId},
+      {profile:file},
+      {upsert:true}
+     )
+     const profile = await User.findOne({_id:req.userId})
+     res.status(200).json({profile:profile.profile})
+    }
+    catch(err){
+      res.send(err.message)
+    }
+ 
+  },  
+  updateProfile:async (req , res) => {
+   console.log("hello")
+   try{
+    const {fullName , userName , email , currentPassword , newPassword} = req.body
+    const user = await User.findOne({_id:req.userId})
+    const checkcurrentPassword = await bcrypt.compare(req.body.currentPassword ,user.password)
+    console.log(checkcurrentPassword)
+    if(!currentPassword.length){
+      console.log("hii")
+      const update = await User.updateOne(
+        {_id:req.userId},
+        {
+          $set:{
+            fullName:fullName,
+            userName:userName,
+            email:email,
+          }
+        }
+      )
+      res.status(200).json({message:"oK"})
+    }
+    if(checkcurrentPassword){
+
+      if(!newPassword.length){
+        res.json({new:"enter your password"})
+      }else{
+        const salt = await bcrypt.genSalt()
+      const newPasswordHashed = await bcrypt.hash(newPassword , salt)
+      const userUpdate = await User.updateMany(
+        {_id:req.userId},
+        {
+          $set:{
+            fullName:fullName,
+            userName:userName,
+            email:email,
+            password:newPasswordHashed
+          }
+        }
+      )
+      res.status(200).json({message:"oK"})
+      }
+      
+    }else{
+      console.log("hee")
+      res.json({pass:"password is incorrect"})
+    }
+   
+   
+   }
+   catch(err){
+    console.log(err)
+    res.send({err:err.code , path:err.keyValue})
+   }
   },
 
   // logout user

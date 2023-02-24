@@ -153,32 +153,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% if(result.length > 0) { %> 
-                                                <% result.map( (item , index)  => { %> 
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div class="custom-control custom-checkbox mb-0">
-                                                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                                            </div>
-                                                        </th>
-                                                        <td><%= index + 1  %>  </td>
-                                                        <td><img src="/images/<%= item.image %> "alt="..." class="cat-img"></td>
-                                                        <td><%= item.name%> </td>
-                                                        <% if(item.disable == true){ %>
-                                                            <td> <a class="btn btn-danger" href="#" role="button" onclick="disable('<%=item._id%>')" id="<%=item._id%>">enable</a></td>
-                                                        <% }else { %> 
-                                                            <td> <a class="btn btn-warning" href="#" role="button" onclick="disable('<%=item._id%>')" id="<%=item._id%>">disable</a></td>
-                                                        <% } %> 
-                                                        
-                                                    </tr>
-
-                                                <% }) %>     
-                                                <% } else { %>  
-                                                    <tr>
-                                                       <th scope="row"></th>
-                                                       <td>no categories to shows</td>
-                                                    </tr>
-                                                <% } %>       
+                                             <% banners.map( (banner , index) => { %>   
+                                                <tr>
+                                                    <th scope="row">
+                                                        <div class="custom-control custom-checkbox mb-0">
+                                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                        </div>
+                                                    </th>
+                                                    <td><%=index + 1%></td>
+                                                    <td><img src="<%=banner.image%>"alt="..." class="cat-img"></td>
+                                                    <td><%=banner.title%></td>
+                                                     <% if(banner.selected == true) {%>
+                                                        <td> <a class="btn btn-success"  role="button" onclick="disable('<%=banner._id%>')" id="btn-<%=banner._id%>">active</a></td>
+                                                    <%}else {%>
+                                                        <td> <a class="btn btn-danger" role="button" onclick="disable('<%=banner._id%>')" id="btn-<%=banner._id%>">inactive</a></td>
+                                                    <% } %>
+                                                </tr> 
+                                             <% }) %>
 
                                             </tbody>
                                         </table>
@@ -209,31 +200,36 @@
     <!-- ALL JS INCLUDE
     ================================================== -->
     <script>
-        
+    
+    async function disable(id){
+     const disableBtn = document.getElementById("btn-"+id)
+     console.log(disableBtn)
+    if(confirm("are you sure to change")){
+        try{
+       const res = await fetch("/admin/disable-banner", {
+        method:"POST",
+        headers:{'Content-Type':"application/json"},
+        body:JSON.stringify({id})
+       })
+       const data = await res.json()
+
+       if(data.message == true){
+         disableBtn.classList.remove("btn-danger")
+         disableBtn.classList.add("btn-success")
+         disableBtn.textContent = 'active'
+       }else{
+        disableBtn.classList.remove("btn-sucess")
+        disableBtn.classList.add("btn-danger")
+        disableBtn.textContent = "inactive"
+       }
+      
+     }
+     catch(err){
+        res.send(err.message)
+     }
+    }
+    }
        
-        async function disable(id){    
-        const disableBtn = document.getElementById(id)
-          try{
-            const res = await fetch("/admin/disable-category",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({id})
-            })
-            const data = await res.json()
-            if(data.data == true){
-              disableBtn.classList.remove("btn-warning")  
-              disableBtn.classList.add("btn-danger")
-              disableBtn.textContent = 'enable'
-            }else{
-                disableBtn.classList.remove("btn-danger")
-                disableBtn.classList.add("btn-warning")
-                disableBtn.textContent = "disable"
-            }
-          }
-          catch(err){
-            console.log(err)
-          }
-        }
     </script>
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>

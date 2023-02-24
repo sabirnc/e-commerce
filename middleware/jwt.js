@@ -84,7 +84,6 @@ module.exports = {
             res.redirect("/login")
           }else{
             let user = await User.findOne({_id:decode.id})
-            console.log(user)
             if(!user.status){
               res.redirect("/login")
             }else{

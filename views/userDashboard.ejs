@@ -35,10 +35,63 @@
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             margin: .5em 0;
         }
+        .profile {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+          }
+        
+          .profile h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #666;
+            text-transform: uppercase;
+          }
+        
+          .profile hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin-bottom: 30px;
+          }
+        
+          .profile-info {
+            display: flex;
+            margin-bottom: 20px;
+          }
+        
+          .profile-info label {
+            flex-basis: 150px;
+            margin-right: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #666;
+          }
+        
+          .profile-info span {
+            font-size: 16px;
+            color: #333;
+          }
+        
+          @media screen and (max-width: 600px) {
+            .profile-info {
+              flex-direction: column;
+            }
+            .profile-info label {
+              margin-bottom: 10px;
+              flex-basis: auto;
+            }
+          }
+          .error{
+            color: red;
+          }
     </style>
     <div class="page-wrapper">
-        <!-- End .header -->
-        <%-include("./partials/nav.ejs") %>
+        <%-include("./partials/nav.ejs")%>
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
@@ -61,9 +114,9 @@
 	                	<div class="row">
 	                		<aside class="col-md-4 col-lg-3">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-								    <!-- <li class="nav-item">
+								    <li class="nav-item">
 								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
-								    </li> -->
+								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false" onclick="displayOrder('<%=user.id%>')">Orders</a>
 								    </li>
@@ -85,10 +138,32 @@
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
 								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-								    	<p>Hello <span class="font-weight-normal text-dark"><%=user.userName%></span> (not <span class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>) 
-								    	<br>
-								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
-								    </div><!-- .End .tab-pane -->
+                                        <hr>                                       
+                                            <div class="profile">
+                                                <% if(user.profile){ %>
+                                                    <img src="<%=user.profile%>" style="width: 150px; border-radius: 50%; margin-bottom: 1em;" alt="" id="profilePic">
+                                                 <% }else{ %>
+                                                    <img src="assets/images/slider/blank-profile-picture-973460_960_720.webp" style="width: 150px; border-radius: 50%; margin-bottom: 1em;" alt="" id="profilePic">
+                                                <%}%>
+                                                <form action="" id="uploadPic">
+                                                <input type="file" name="file" id="file">
+                                               </form>
+                                                <h2>Profile Information</h2>
+                                                <hr>
+                                                <div class="profile-info">
+                                                  <label for="name">Name:</label>
+                                                  <span id="name"><%=user.fullName%></span>
+                                                </div>
+                                                <div class="profile-info">
+                                                  <label for="email">Email:</label>
+                                                  <span id="email"><%=user.email%></span>
+                                                </div>
+                                                <div class="profile-info">
+                                                  <label for="profile_phone"> Phone:</label>
+                                                  <span id="profile_phone"><%= user.phoneNumber%></span>
+                                                </div>
+                                              </div>
+                                          </div><!-- .End .tab-pane -->
 
                                     <div class="tab-pane fade " id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
 								    	<% if(orders == null){ %> 
@@ -145,35 +220,36 @@
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
+								    	<form action="#" id="changeProfile">
 			                				<div class="row">
 			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<label>full Name *</label>
+			                						<input type="text" class="form-control" required name="fullName"  value="<%=user.fullName%>">
+                                                    <div class="fullNameError error"></div>
 			                					</div><!-- End .col-sm-6 -->
 
 			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
+			                						<label>user Name *</label>
+			                						<input type="text" class="form-control" required name="userName" value="<%=user.userName%>">
+                                                    <div class="userNameError error"></div>
 			                					</div><!-- End .col-sm-6 -->
 			                				</div><!-- End .row -->
 
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
 		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+		        							<input type="email" class="form-control" required name="email" value="<%=user.email%>">
+                                            <div class="emailError error"></div>
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" class="form-control" name="currentPassword">
+                                            <div class="current error"></div>
 
 		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" class="form-control"name="newPassword" id="new">
+                                            <div class="newpassword error"></div>
 
 		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
-
+		            						<input type="password" class="form-control mb-2" name="confirmPassword">
+                                            <div class="confirmPassword error"></div>
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>
 			            						<i class="icon-long-arrow-right"></i>
@@ -217,120 +293,9 @@
     </div><!-- End .mobile-menu-container -->
 
     <!-- Sign in / Register Modal -->
-    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="icon-close"></i></span>
-                    </button>
-
-                    <div class="form-box">
-                        <div class="form-tab">
-                            <ul class="nav nav-pills nav-fill" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="singin-email">Username or email address *</label>
-                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>LOG IN</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
-                                            </div><!-- End .custom-checkbox -->
-
-                                            <a href="#" class="forgot-link">Forgot Your Password?</a>
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-g">
-                                                    <i class="icon-google"></i>
-                                                    Login With Google
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>SIGN UP</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
-                                            </div><!-- End .custom-checkbox -->
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-g">
-                                                    <i class="icon-google"></i>
-                                                    Login With Google
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login  btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                            </div><!-- End .tab-content -->
-                        </div><!-- End .form-tab -->
-                    </div><!-- End .form-box -->
-                </div><!-- End .modal-body -->
-            </div><!-- End .modal-content -->
-        </div><!-- End .modal-dialog -->
-    </div><!-- End .modal -->
     <script>
         const div = document.getElementById("tab-orders")
+        const profilePic = document.getElementById("profilePic")
         async function displayOrder(id){
           const res = await fetch(`/orders?id=${id}`, {
             method:"GET",
@@ -342,6 +307,100 @@
 							<a href="/shop" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>`
           }
         }
+
+       const file = document.getElementById("file")
+       const formData = new FormData()
+       file.addEventListener('change' , async function(){
+          formData.append("file", file.files[0])
+         try{
+           const res = await fetch("/upload" , {
+            method:"POST",
+            body:formData,
+           })
+
+           const data = await res.json()
+           console.log(typeof data.profile)
+           if(data.profile){
+             profilePic.src = data.profile
+             
+           }
+         }
+         catch(err){
+            alert("an error occured while uploading photo please try after some time")
+         }
+       })
+
+       const profileForm = document.getElementById("changeProfile")
+       const fullNameError = document.querySelector(".fullNameError.error")
+       const userNameError = document.querySelector(".userNameError.error")
+       const emailError = document.querySelector(".emailError.error")
+       const newPasswordError = document.querySelector(".newpassword.error")
+       const confirmPasswordError = document.querySelector(".confirmPassword.error")
+       const currentPasswordError = document.querySelector(".current.error")
+       const newp = document.getElementById("new")
+
+       profileForm.addEventListener("submit" , async function(e){
+         e.preventDefault()
+         const fullName = profileForm.fullName.value
+         const userName = profileForm.userName.value 
+         const email = profileForm.email.value
+         const currentPassword = profileForm.currentPassword.value
+         const newPassword = profileForm.newPassword.value
+         const confirmPassword = profileForm.confirmPassword.value
+         confirmPasswordError.textContent = ""
+         userNameError.textContent = ""
+         currentPasswordError.textContent = ""
+
+        if(newPassword.length > 6){
+            newPasswordError.textContent = ""
+        }
+
+        if(newPassword != confirmPassword){
+            confirmPasswordError.textContent = "password not matching"
+        }
+        else if(currentPassword.length && !newPassword.length){
+            newp.setAttribute('required' , true)
+            if(newPassword.length < 1){
+               alert("enter new password")
+            }
+        }
+        else if(newPassword.length < 1){
+            newPasswordError.textContent = "minimum 6 character require"
+            
+        }
+        else{    
+        try{
+         const res = await fetch("/update-profile" ,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({fullName , userName , email ,newPassword , currentPassword })
+         })
+         const  data = await res.json()
+         if(data.message){
+            location.reload()
+         }
+         if(data.err == 11000){
+           if(data.path){
+             userNameError.textContent = "username already taken"
+           }
+         }
+
+         if(data.pass){
+          currentPasswordError.textContent = data.pass
+         }
+        }
+        catch(err){
+          console.log(err)
+        }   
+        }
+      
+        
+         
+       
+        
+       
+        
+       })
     </script>
     <!-- Plugins JS File -->
     <script src="/js/placeOrder.js"></script>

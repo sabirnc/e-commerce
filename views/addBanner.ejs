@@ -96,15 +96,15 @@
                         <div class="col-md-12 grid-margin">
                             <div class="card card-white">
                                 <div class="card-body">
-                                    <form id="category-form" enctype="multipart/form-data">
+                                    <form id="banner-form">
                                         <div class="form-group">
                                             <label for="exampleInput1">Add your Banner discribtion</label>
-                                            <input type="text" class="form-control" id="exampleInput1" aria-describedby="exampleInput1" name="categoryname" rrequired/>
+                                            <input type="text" class="form-control" id="exampleInput1" aria-describedby="exampleInput1" name="bannerTitle" required/>
                                             <div class="error name"></div>
                                         </div>
                                         <div class="form-group mb-4">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile" name="files" multiple required/>
+                                                <input type="file" class="custom-file-input" id="customFile" name="files"/>
                                                 <label class="custom-file-label" for="customFile" >Choose file</label>
                                                 <div class="error image" ></div>
                                             </div>
@@ -124,6 +124,35 @@
                     <p>Copyright &copy; <span class="current-year"></span> MOLLA.</p>
                 </div><script src="/plugins/jquery/jquery.min.js"></script>
 
+                <script>
+                    const description = document.getElementById("exampleInput1")
+                    const bannerForm = document.getElementById("banner-form")
+
+                    bannerForm.addEventListener("submit" , async function(e){
+                        e.preventDefault()
+                        const title = bannerForm.bannerTitle.value
+                        const file = document.getElementById("customFile")
+                        const formData = new FormData()
+                        formData.append("title", title)
+                        formData.append("file", file.files[0])
+                        console.log(file.files[0])
+                        try{
+                          const res = await fetch("/admin/add-banner",{
+                            method:"POST",
+                            body:formData,
+                          })
+
+                          const data = await res.json()
+                          if(data.message){
+                            location.assign("/admin/banner")
+                          }
+                        }
+                        catch(err){
+                            console.log(err)
+                        }
+                    })
+                  
+                </script>
                 <!-- popper -->
                 <script src="/plugins/popper/js/popper.min.js"></script>
             

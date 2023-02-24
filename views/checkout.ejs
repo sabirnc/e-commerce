@@ -223,8 +223,8 @@
 
 		                					<tbody>
 		                						
-                                               <% if(cart.length > 0){ %> 
-                                                <% cart[0].item.map( product => { %> 
+                                               <% if(cart.item.length > 0){ %> 
+                                                <% cart.item.map( product => { %> 
                                                     <tr>
                                                         <td><a href="#"><%= product.product.productName%> </a></td>
                                                         <td>$ <%= product.totalPrice %> </td>
@@ -238,8 +238,8 @@
                                             
 		                						<tr class="summary-total">
                                                     <td>Total:</td>
-		                							<% if(cart.length > 0){ %> 
-		                							    <td>$ <%=cart[0].total %> </td>
+		                							<% if(cart.item.length > 0){ %> 
+		                							    <td>$ <%=cart.total %> </td>
                                                     <% }else{ %> 
                                                          <td>0</td> 
                                                     <% } %> 
@@ -255,7 +255,7 @@
                                         </div>
                                         <div id="paypal-button-container" style="margin: 0 auto;max-width: auto;"></div>
                                           <div class="error payment"></div>
-                                            <button class="btn btn-outline-primary-2  btn-block"  onclick="placeOrder('<%=cart[0].owner._id%>')">
+                                            <button class="btn btn-outline-primary-2  btn-block"  onclick="placeOrder('<%=cart.owner._id%>')">
                                                 <span class="btn-text"><a href="">Place Order</a></span>
                                                  <span class="btn-hover-text">Proceed to Checkout</span> 
                                             </button>
@@ -449,8 +449,7 @@
           // Order is created on the server and the order id is returned
             createOrder() {
 
-            if(radios.checked){
-            console.log("hello")   
+            if(radios.checked){  
             return fetch("/create-paypal-order", {
               method: "post",
               // use the "body" param to optionally pass additional order information

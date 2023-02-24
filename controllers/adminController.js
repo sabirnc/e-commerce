@@ -5,9 +5,11 @@ const Coupons = require("../models/coupon");
 const User = require("../models/user");
 const Order = require("../models/order");
 const userAddress = require("../models/userAddress");
+const banner = require("../models/banner")
 const jwt = require("jsonwebtoken");
 const randomId = require("random-id");
 const order = require("../models/order");
+const { find } = require("../models/adminProduct");
 const cloudinary = require("cloudinary").v2
 const len = 10;
 const pattern = "aA0";
@@ -381,5 +383,53 @@ module.exports = {
 
   adminBanner:(req , res) => {
     res.render("addBanner")
-  }
+  },
+
+  uploadBanner:async (req , res) => {
+    try{
+      let files
+      const upload = await cloudinary.uploader.upload(req.file.path, function(err ,result){
+        files = result.url
+      })
+      const Banner = new banner({
+         title:req.body.title,
+         image:files
+      })
+      Banner.save()
+      res.status(200).json({message:"oK"})
+    }
+    catch(err){
+      res.send(err.message)
+    }
+  },
+
+  banner: async (req , res) => {
+    try{
+
+      const banners = await banner.find({})
+      res.render("banner", {banners})
+    }
+    catch(err){
+      res.send(err.message)
+    }
+  },
+
+  disableBanner:async (req , res) => {
+    try{
+      console.log(req.body)
+      const disableBanner = await banner.updateOne(
+        {_id:req.body.id},
+        [{ $set: { selected: { $not:"$selected"}}}]
+      )
+      const update = await banner.findOne({_id:req.body.id})
+      res.status(200).json({message:update.selected})
+    }
+    catch(err){
+      res.send(err.message)
+    }
+  },
+  
+  cloudinary
+
+  
 };

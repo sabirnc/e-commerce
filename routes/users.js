@@ -3,6 +3,7 @@ var router = express.Router();
 const userController = require("../controllers/userController");
 const jwt = require('../middleware/jwt');
 const {jwt_func , checkUser , ifLoged, checkStatus , checkCart} = require("../middleware/jwt")
+const {singleUploadErrorHandling} = require("../middleware/multer")
 /* GET users listing. */
 router.get('/',  checkUser ,userController.home_get)
 router.get("/login",ifLoged, userController.login_get)
@@ -32,9 +33,11 @@ router.post("/remove-coupon" , checkStatus , checkUser , jwt_func , userControll
 router.get("/filer-product" ,checkStatus, checkUser , jwt_func , userController.filterProduct)
 router.post("/addToWishlist" , checkStatus , checkUser , jwt_func , userController.addToWishlist)
 router.post("/delete-product", checkStatus , checkUser , jwt_func , userController.deleteProduct)
-router.get("/orders",checkStatus ,checkUser , jwt_func , userController.orders)
+router.get("/orders",checkStatus ,checkUser , jwt_func ,  userController.orders)
 router.post("/create-paypal-order", checkStatus , checkUser , jwt_func ,userController.createPaypalOrder)
 router.get("/get-orders", checkUser , checkStatus , jwt_func , userController.totalOrders)
+router.post("/upload" , checkStatus , checkUser , jwt_func ,singleUploadErrorHandling, userController.uploadProfilePhoto)
+router.post("/update-profile" , checkStatus , checkUser , jwt_func , userController.updateProfile)
 router.get("/invoice/:id" , checkStatus , checkUser , jwt_func , userController.invoice)
 
 
