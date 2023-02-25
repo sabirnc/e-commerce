@@ -723,8 +723,20 @@ module.exports = {
       const cart = await Cart.findOne({ owner: req.userId }).populate(
         "item.product"
       );
+      let discount = 0;
+      let total = cart.total
+      const user = await User.findOne({_id:req.userId})
       const request = new paypal.orders.OrdersCreateRequest();
-      const total = cart.total;
+      if(user.couponApplied){
+        const coupon = await Coupons.findOne({couponCode:user.coupons})
+        discount = coupon.discountRate
+        total = cart.total + coupon.discountRate
+        console.log(cart.total)
+        console.log(discount)
+        console.log(total)
+      }
+ 
+      
       request.prefer("return=representation");
       request.requestBody({
         intent: "CAPTURE",
@@ -732,14 +744,18 @@ module.exports = {
           {
             amount: {
               currency_code: "USD",
-              value: cart.total,
+              value:cart.total,
               breakdown: {
                 item_total: {
                   currency_code: "USD",
-                  value: cart.total,
+                  value:total,
                 },
+              discount:{
+                currency_code:"USD",
+                value:discount
               },
             },
+          },
             items: cart.item.map((item) => {
               return {
                 name: item.product.productName,
@@ -750,6 +766,7 @@ module.exports = {
                 quantity: item.quantity,
               };
             }),
+           
           },
         ],
       });
