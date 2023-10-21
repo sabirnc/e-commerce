@@ -11,7 +11,6 @@
 
     <!-- title  -->
     <title>MOLLA ADMIN</title>
-
     <!-- favicon -->
     <link rel="shortcut icon" href="/img/logos/favicon.png" />
     <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57x57.png" />
@@ -31,14 +30,6 @@
 </head>
 
 <body>
-
-    <style>
-        .error{
-            color: red;
-            margin: .5em 0;
-        }
-    </style>
-
     <!-- PAGE LOADING
     ================================================== -->
     <div id="preloader"></div>
@@ -49,8 +40,7 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-         <%-include("./partials/adminsidebar.ejs")  %>
-
+        <%-include("../partials/adminsidebar.ejs") %>    
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -74,12 +64,13 @@
                         <div class="navbar-header">
                             <div class="logo-sm">
                                 <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
-                                <a class="logo-box" href="/admin"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
+                                <a class="logo-box" href="index.html"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
                             </div>
                             <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                                 <i class="fa fa-angle-down"></i>
                             </button>
                         </div>
+                        <!-- /.navbar-collapse -->
                     </div>
                     <!-- /.container-fluid -->
                 </nav>
@@ -92,54 +83,87 @@
                 <!-- PAGE MAIN WRAPPER
                 ================================================== -->
                 <div id="main-wrapper">
-
                     <!-- row -->
-                    <div class="row">
-                        <div class="col-md-12 grid-margin">
+                    <div class="row align-items-center grid-margin">
+                        <div class="col-12">
                             <div class="card card-white">
-                                <div class="card-heading clearfix">
-                                    <h4 class="card-title">Upload your Category</h4>
-                                </div>
-                                <div class="card-body">
-                                    <!-- <form class="form-inline" method="post" action="/admin/addcategory">
-                                        
-                                    </form> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end row -->
+                                <div class="card-body row align-items-center">
+                                    <div class="col-12 col-md-5 mb-4 mb-md-0">
+                                        <h4 class="mb-0">Customers</h4>
+                                    </div>
 
-                    <!-- row -->
-                    <div class="row">
-                        <div class="col-md-12 grid-margin">
-                            <div class="card card-white">
-                                <div class="card-heading clearfix">
-                                    <h4 class="card-title">Add your category description</h4>
-                                </div>
-                                <div class="card-body">
-                                    <form id="category-form" enctype="multipart/form-data">
-                                        <div class="form-group">
-                                            <label for="exampleInput1">Category Name</label>
-                                            <input type="text" class="form-control" id="exampleInput1" aria-describedby="exampleInput1" name="categoryname" rrequired/>
-                                            <div class="error name"></div>
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile" name="files" multiple required/>
-                                                <label class="custom-file-label" for="customFile" >Choose file</label>
-                                                <div class="error image" ></div>
+                                    <div class="col-12 col-md-7">
+
+                                        <div class="row">
+
+                                            <div class="col-md-8 mb-3 mb-md-0">
+                                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="exampleInputEmail1" placeholder="search by name">
                                             </div>
+
+                                            <div class="col-md-4">
+                                                <select class="form-control form-select">
+                                                    <option>Order Amount</option>
+                                                    <option>Highest To Lowest</option>
+                                                    <option>Lowest To Highest</option>
+                                                </select>
+                                            </div>
+
                                         </div>
-                                        <div>
-                                            <button  class="btn btn-primary">Add Category</button>
-                                        </div>
-                                    </form>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- end row -->
+
+                    <!-- Row -->
+                    <div class="row">
+                        <div class="col-12 grid-margin">
+                            <div class="card card-white">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Contacts</th>
+                                                <!-- <th scope="col">Total Orders</th> -->
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Joining Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users.map( (user, index) => { %> 
+                                                <tr>
+                                                    <th scope="row"><%= index+1  %> </th>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div>
+                                                                <h6><%= user.userName %> </h6>
+                                                                <span><%= user.email  %> </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td><%= user.phoneNumber  %> </td>
+                                                    <!-- <td></td> -->
+                                                    <td id="status-<%=user._id%>" onclick="changeStatus('<%=user._id%>')">
+                                                        <% if(user.status){ %> 
+                                                            <span class="badge rounded-pill bg-soft-green" id="active">Active</span>
+                                                        <% }else { %>
+                                                            <span class="badge rounded-pill bg-soft-pink" id="blocked">Blocked</span>
+                                                        <% } %> 
+                                                   </td>
+                                                    <td><%=user.created.toUTCString()%> </td>
+                                                </tr>
+                                            <% }) %>     
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row -->
                 </div>
 
                 <div class="page-footer">
@@ -157,50 +181,32 @@
 
     <!-- ALL JS INCLUDE
     ================================================== -->
-
     <script>
-        const form = document.querySelector("#category-form")
-        const nameError = document.querySelector(".error.name")
-        const imageError = document.querySelector(".error.image")   
-        form.addEventListener("submit" , async (e) => {
-            e.preventDefault()
-            const category = form.categoryname.value
-            const file = document.querySelector("#customFile")
-            const formData = new FormData()
-            formData.append("file" , file.files[0] )
-            formData.append( "categoryname", category)
-
-            nameError.textContent = ""
-            imageError.textContent = ""
-            
-            try{
-
-              const res = await fetch("/admin/addcategory" , {
+        
+        async function changeStatus(id){
+        const status = document.getElementById("status-"+id)    
+          if(confirm("are you sure to block this user")){
+              try{
+            const res = await fetch("/admin/customers" , {
                 method:"POST",
-                body:formData ,
-                
-                
+                body:JSON.stringify({id}),
+                headers:{"Content-Type":"application/json"}
             })
-
-            const data =  await res.json()
-            if(data.data){
-                location.assign("/admin/category")
-            }
-            if(data.error){
-                nameError.textContent = data.error.name
-                imageError.textContent = data.error.image
-            }
-            if(data.errors){
-                imageError.textContent = data.errors
+            const data = await res.json()
+            if(data.status){
+             status.innerHTML = ` <span class="badge rounded-pill bg-soft-green" id="active">Active</span>`
+            }else{
+             status.innerHTML = `<span class="badge rounded-pill bg-soft-pink" id="blocked">Blocked</span>`
             }
 
-            }
-            catch(err){
-                console.log(err)
-            }
             
-        })
-
+          }
+          catch(err){
+            console.log(err)
+          }
+          }
+        }
+       
     </script>
 
     <!-- jQuery -->
@@ -225,7 +231,6 @@
     <script src="/js/main.js"></script>
 
     <!-- all js include end -->
-
 </body>
 
 </html>

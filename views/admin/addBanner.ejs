@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- metas -->
-    <meta charset="utf-8" />
-    <meta name="author" content="Chitrakoot Web" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="keywords" content="admin,dashboard" />
-    <meta name="description" content="Smartshop - Responsive eCommerce Admin Dashboard" />
-
-    <!-- title  -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOLLA ADMIN</title>
-    <!-- favicon -->
+
     <link rel="shortcut icon" href="/img/logos/favicon.png" />
     <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72x72.png" />
@@ -24,17 +18,10 @@
     <link rel="stylesheet" href="/plugins/uniform/css/default.css" />
     <link rel="stylesheet" href="/plugins/switchery/switchery.min.css" />
 
-    <!-- datepicker css -->
-    <link rel="stylesheet" href="/plugins/bootstrap-datepicker/css/datepicker.css" />
-
     <!-- theme core css -->
     <link rel="stylesheet" href="/css/styles.css" />
-
 </head>
-
 <body>
-    <!-- PAGE LOADING
-    ================================================== -->
     <div id="preloader"></div>
 
     <!-- PAGE CONTAINER
@@ -43,7 +30,8 @@
 
         <!-- PAGE SIDEBAR
         ================================================== -->
-        <%-include("./partials/adminsidebar.ejs")%>
+         <%-include("../partials/adminsidebar.ejs")  %>
+
         <!-- PAGE CONTENT
         ================================================== -->
         <div class="page-content">
@@ -67,7 +55,7 @@
                         <div class="navbar-header">
                             <div class="logo-sm">
                                 <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
-                                <a class="logo-box" href="index.html"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
+                                <a class="logo-box" href="/admin"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
                             </div>
                             <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                                 <i class="fa fa-angle-down"></i>
@@ -85,70 +73,113 @@
                 <!-- PAGE MAIN WRAPPER
                 ================================================== -->
                 <div id="main-wrapper">
+
                     <!-- row -->
                     <div class="row">
                         <div class="col-md-12 grid-margin">
                             <div class="card card-white">
                                 <div class="card-heading clearfix">
-                                    <h4 class="card-title">General</h4>
+                                    <h4 class="card-title">Upload your Banner</h4>
                                 </div>
                                 <div class="card-body">
-                                    <form action="/admin/create-coupons" method="post">
+                                    <!-- <form class="form-inline" method="post" action="/admin/addcategory">
+                                        
+                                    </form> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <div class="card card-white">
+                                <div class="card-body">
+                                    <form id="banner-form">
                                         <div class="form-group">
-                                            <label for="exampleInput1">Coupan Title</label>
-                                            <input type="text" class="form-control" id="exampleInput1" name="couponName">
+                                            <label for="exampleInput1">Add your Banner discribtion</label>
+                                            <input type="text" class="form-control" id="exampleInput1" aria-describedby="exampleInput1" name="bannerTitle" required/>
+                                            <div class="error name"></div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="exampleInput2">Coupan Code</label>
-                                            <input type="text" class="form-control" id="exampleInput2" name="couponCode">
+                                        <div class="form-group mb-4">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="customFile" name="files"/>
+                                                <label class="custom-file-label" for="customFile" >Choose file</label>
+                                                <div class="error image" ></div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Start Date</label>
-                                            <input type="text" class="form-control date-picker" name="startDate">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>End Date</label>
-                                            <input type="text" class="form-control date-picker" name="endDate">
-                                        </div>
-                                        <div class="custom-control custom-checkbox my-4">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" name="shipping">
-                                            <label class="form-check-label" for="flexCheckChecked">
-                                                Allow Free Shipping
-                                            </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInput3">Quantity</label>
-                                            <input type="number" class="form-control" id="exampleInput3" name="quantity">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="validationCustom02">Discout Rate</label>
-                                            <input type="text" class="form-control" id="exampleInput2" name="DiscountRate">
-                                        </div>                                        </div> 
                                         <div>
-                                            <button type="submit" class="btn btn-primary">Creat Coupon</button>
+                                            <button  class="btn btn-primary">Add Banner</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- end row -->
                 </div>
 
                 <div class="page-footer">
-                    <p>Copyright &copy; <span class="current-year"></span> Smartshop All rights reserved.</p>
-                </div>
+                    <p>Copyright &copy; <span class="current-year"></span> MOLLA.</p>
+                </div><script src="/plugins/jquery/jquery.min.js"></script>
+
+                <script>
+                    const description = document.getElementById("exampleInput1")
+                    const bannerForm = document.getElementById("banner-form")
+
+                    bannerForm.addEventListener("submit" , async function(e){
+                        e.preventDefault()
+                        const title = bannerForm.bannerTitle.value
+                        const file = document.getElementById("customFile")
+                        const formData = new FormData()
+                        formData.append("title", title)
+                        formData.append("file", file.files[0])
+                        console.log(file.files[0])
+                        try{
+                          const res = await fetch("/admin/add-banner",{
+                            method:"POST",
+                            body:formData,
+                          })
+
+                          const data = await res.json()
+                          if(data.message){
+                            location.assign("/admin/banner")
+                          }
+                        }
+                        catch(err){
+                            console.log(err)
+                        }
+                    })
+                  
+                </script>
+                <!-- popper -->
+                <script src="/plugins/popper/js/popper.min.js"></script>
+            
+                <!-- bootstrap -->
+                <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+            
+                <!-- slimscroll -->
+                <script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+            
+                <!-- uniform -->
+                <script src="/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+            
+                <!-- switchery -->
+                <script src="/plugins/switchery/switchery.min.js"></script>
+            
+                <!-- theme core scripts -->
+                <script src="/js/main.js"></script>
             </div>
         </div>
 
-    </div>    
+    </div>
+
+    
     <!-- SCROLL TO TOP
     ================================================== -->
     <a href="#" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
 
-    <!-- ALL JS INCLUDE
-    ================================================== -->
-
-    <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
 
     <!-- popper -->
@@ -166,15 +197,8 @@
     <!-- switchery -->
     <script src="/plugins/switchery/switchery.min.js"></script>
 
-    <!-- datepicker -->
-    <script src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-
-    <!-- form elements -->
-    <script src="/js/pages/form-elements.js"></script>
-
     <!-- theme core scripts -->
     <script src="/js/main.js"></script>
 
-    <!-- all js include end -->
 </body>
 </html>
