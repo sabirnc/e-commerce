@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const randomId = require("random-id");
 const order = require("../models/order");
 const { find } = require("../models/adminProduct");
+const multer = require("multer");
 const cloudinary = require("cloudinary").v2
 const len = 10;
 const pattern = "aA0";
@@ -388,7 +389,7 @@ module.exports = {
   uploadBanner:async (req , res) => {
     try{
       let files
-      const upload = await cloudinary.uploader.upload(req.file.path, function(err ,result){
+      const upload = await multer.upload(req.file.path, function(err ,result){
         files = result.url
       })
       const Banner = new banner({

@@ -27,7 +27,7 @@ app.get("*", (req , res) => {
   res.render("404.ejs")
 })
 
-mongoose.connect(process.env.uri , 
+mongoose.connect("mongodb+srv://sabir:sabir123@cluster0.brtbr.mongodb.net/?retryWrites=true&w=majority" , 
   { useNewUrlParser: true, useUnifiedTopology: true }
 )
 .then( () => {
@@ -55,5 +55,5 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.listen(3000)
+app.listen(4000)
 module.exports = app;
