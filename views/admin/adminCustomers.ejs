@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- metas -->
+    <meta charset="utf-8" />
+    <meta name="author" content="Chitrakoot Web" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="keywords" content="admin,dashboard" />
+    <meta name="description" content="Smartshop - Responsive eCommerce Admin Dashboard" />
+
+    <!-- title  -->
+    <title>MOLLA ADMIN</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/img/logos/favicon.png" />
+    <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/logos/apple-touch-icon-114x114.png" />
+
+    <!-- common plugins -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/plugins/icomoon/style.css" />
+    <link rel="stylesheet" href="/plugins/uniform/css/default.css" />
+    <link rel="stylesheet" href="/plugins/switchery/switchery.min.css" />
+
+    <!-- theme core css -->
+    <link rel="stylesheet" href="/css/styles.css" />
+
+</head>
+
+<body>
+    <!-- PAGE LOADING
+    ================================================== -->
+    <div id="preloader"></div>
+
+    <!-- PAGE CONTAINER
+    ================================================== -->
+    <div class="page-container">
+
+        <!-- PAGE SIDEBAR
+        ================================================== -->
+        <%-include("../partials/adminsidebar.ejs") %>    
+        <!-- PAGE CONTENT
+        ================================================== -->
+        <div class="page-content">
+
+            <!-- PAGE HEADER
+            ================================================== -->
+            <div class="page-header">
+                <div class="search-form">
+                    <form action="#" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <div class="logo-sm">
+                                <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                                <a class="logo-box" href="index.html"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
+                            </div>
+                            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+            <!-- PAGE INNER
+            ================================================== -->
+            <div class="page-inner">
+
+                <!-- PAGE MAIN WRAPPER
+                ================================================== -->
+                <div id="main-wrapper">
+                    <!-- row -->
+                    <div class="row align-items-center grid-margin">
+                        <div class="col-12">
+                            <div class="card card-white">
+                                <div class="card-body row align-items-center">
+                                    <div class="col-12 col-md-5 mb-4 mb-md-0">
+                                        <h4 class="mb-0">Customers</h4>
+                                    </div>
+
+                                    <div class="col-12 col-md-7">
+
+                                        <div class="row">
+
+                                            <div class="col-md-8 mb-3 mb-md-0">
+                                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="exampleInputEmail1" placeholder="search by name">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <select class="form-control form-select">
+                                                    <option>Order Amount</option>
+                                                    <option>Highest To Lowest</option>
+                                                    <option>Lowest To Highest</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                    <!-- Row -->
+                    <div class="row">
+                        <div class="col-12 grid-margin">
+                            <div class="card card-white">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Contacts</th>
+                                                <!-- <th scope="col">Total Orders</th> -->
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Joining Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users.map( (user, index) => { %> 
+                                                <tr>
+                                                    <th scope="row"><%= index+1  %> </th>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div>
+                                                                <h6><%= user.userName %> </h6>
+                                                                <span><%= user.email  %> </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td><%= user.phoneNumber  %> </td>
+                                                    <!-- <td></td> -->
+                                                    <td id="status-<%=user._id%>" onclick="changeStatus('<%=user._id%>')">
+                                                        <% if(user.status){ %> 
+                                                            <span class="badge rounded-pill bg-soft-green" id="active">Active</span>
+                                                        <% }else { %>
+                                                            <span class="badge rounded-pill bg-soft-pink" id="blocked">Blocked</span>
+                                                        <% } %> 
+                                                   </td>
+                                                    <td><%=user.created.toUTCString()%> </td>
+                                                </tr>
+                                            <% }) %>     
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row -->
+                </div>
+
+                <div class="page-footer">
+                    <p>Copyright &copy; <span class="current-year"></span> Smartshop All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+    <!-- SCROLL TO TOP
+    ================================================== -->
+    <a href="#" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+    <!-- ALL JS INCLUDE
+    ================================================== -->
+    <script>
+        
+        async function changeStatus(id){
+        const status = document.getElementById("status-"+id)    
+          if(confirm("are you sure to block this user")){
+              try{
+            const res = await fetch("/admin/customers" , {
+                method:"POST",
+                body:JSON.stringify({id}),
+                headers:{"Content-Type":"application/json"}
+            })
+            const data = await res.json()
+            if(data.status){
+             status.innerHTML = ` <span class="badge rounded-pill bg-soft-green" id="active">Active</span>`
+            }else{
+             status.innerHTML = `<span class="badge rounded-pill bg-soft-pink" id="blocked">Blocked</span>`
+            }
+
+            
+          }
+          catch(err){
+            console.log(err)
+          }
+          }
+        }
+       
+    </script>
+
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+
+    <!-- popper -->
+    <script src="/plugins/popper/js/popper.min.js"></script>
+
+    <!-- bootstrap -->
+    <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- slimscroll -->
+    <script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- uniform -->
+    <script src="/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+
+    <!-- switchery -->
+    <script src="/plugins/switchery/switchery.min.js"></script>
+
+    <!-- theme core scripts -->
+    <script src="/js/main.js"></script>
+
+    <!-- all js include end -->
+</body>
+
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- metas -->
+    <meta charset="utf-8" />
+    <meta name="author" content="Chitrakoot Web" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="keywords" content="admin,dashboard" />
+    <meta name="description" content="Smartshop - Responsive eCommerce Admin Dashboard" />
+
+    <!-- title  -->
+    <title>MOLLA ADMIN</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/img/logos/favicon.png" />
+    <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/logos/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/logos/apple-touch-icon-114x114.png" />
+
+    <!-- common plugins -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/plugins/icomoon/style.css" />
+    <link rel="stylesheet" href="/plugins/uniform/css/default.css" />
+    <link rel="stylesheet" href="plugins/switchery/switchery.min.css" />
+
+    <!-- quill editor plugin -->
+    <link rel="stylesheet" href="/plugins/quill/quill.snow.css" />
+
+    <!-- quill editor plugin -->
+    <link rel="stylesheet" href="/plugins/isotope/magnific-popup.css" />
+
+    <!-- tagsinput plugin -->
+    <link rel="stylesheet" href="/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" />
+
+    <!-- theme core css -->
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <!-- Font Awesome -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+    rel="stylesheet"
+    />
+    <!-- MDB -->
+
+</head>
+
+<body>
+
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+
+    <!-- PAGE LOADING
+    ================================================== -->
+    <div id="preloader"></div>
+
+    <!-- PAGE CONTAINER
+    ================================================== -->
+    <div class="page-container">
+
+        <!-- PAGE SIDEBAR
+        ================================================== -->
+        <%-include("../partials/adminsidebar.ejs")  %>   
+        <!-- PAGE CONTENT
+        ================================================== -->
+        <div class="page-content">
+
+            <!-- PAGE HEADER
+            ================================================== -->
+            <div class="page-header">
+                <div class="search-form">
+                    <form action="#" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <div class="logo-sm">
+                                <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                                <a class="logo-box" href="index.html"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
+                            </div>
+                            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+            <!-- PAGE INNER
+            ================================================== -->
+            <div class="page-inner">
+
+                <!-- PAGE MAIN WRAPPER
+                ================================================== -->
+                <div id="main-wrapper">
+                    <!-- row -->
+                    <div class="row g-xl-3">
+                        <div class="col-xl-8 grid-margin">
+                            <div class="card card-white mb-3">
+                                <div class="card-heading clearfix">
+                                    <h4 class="card-title">Product information</h4>
+                                </div>
+                                <div class="card-body">
+
+                                    <form class="needs-validation" enctype="multipart/form-data" id="add-form">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for="validationCustom01">Name</label>
+                                                <input type="text" class="form-control" id="validationCustom01" placeholder="Name of the product" name="productName" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom02">Price</label>
+                                                <input type="text" class="form-control" id="validationCustom02" placeholder="Enter the price" name="productPrice"  required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom03">Size</label>
+                                                <input type="text" class="form-control" id="validationCustom03" name="productSize" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom04">Color</label>
+                                                <input type="text" class="form-control" id="validationCustom04" name="productColor" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="validationCustom05">Product in Stock</label>
+                                                <input type="text" class="form-control" id="validationCustom05" name="productInStock" required>
+                                                <div class="valid-feedback">
+                                                    Looks good!
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card card-white mb-3">
+                                            <div class="card-heading clearfix">
+                                                <h4 class="card-title">Media</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div>
+                                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="file" multiple required>
+                                                            <div class="error input-error"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <label for="validationCustom09">Category</label>
+                                            <select class="form-select form-control" id="validationCustom09"aria-label="Default select example" name="productCategory" required>
+                                                <% category.map( item => { %> 
+                                                    <option><%= item.name %> </option>
+                                                <% }) %>     
+                                                
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">Add Product</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+
+                <div class="page-footer">
+                    <p>Copyright &copy; <span class="current-year"></span> Smartshop All rights reserved.</p>
+                </div>
+
+                <div class="loader" id="loader">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span><br>
+                      </div>
+                      <span>loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .loader{
+                position: fixed;
+                top: 40%;
+                left:40%;
+                padding:2em 3em;   
+                border-radius: 5px;
+                box-shadow: 0 0 3px rgba(0,0,0 , 1);
+            }
+        </style>
+       
+     <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"
+    ></script>
+
+    <!-- SCROLL TO TOP
+     ================================================== -->
+    <a href="#" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+    <!-- ALL JS INCLUDE
+    ================================================== -->
+    <script>
+        const loader = document.getElementById("loader")
+        loader.style.display = "none"
+        const form = document.querySelector("#add-form")
+        const inputError = document.querySelector(".error.input-error")
+        form.addEventListener("submit" ,async (e) => {
+            e.preventDefault()
+            const productName = form.productName.value
+            const productColor = form.productColor.value
+            const productSize = form.productSize.value
+            const productInStock = form.productInStock.value
+            const productprize = form.productPrice.value
+            const productCategory = form.productCategory.value
+            const file = document.querySelector("#formFileLg")
+            const formData = new FormData()
+            formData.append("productName" , productName)
+            formData.append("productColor", productColor)
+            formData.append("productSize" , productSize)
+            formData.append("productInStock" , productInStock)
+            formData.append("productPrize", productprize)
+            formData.append("productCategory", productCategory)
+            for(i=0; i < file.files.length; i++){
+                formData.append("file" , file.files[i] )
+            }
+            try{
+                const load = 0
+                if(load == 0){
+                    loader.style.display = "block"
+                }
+                const res = await fetch("/admin/add-product" , {
+                    method:"POST",
+                    body:formData
+                })
+                const data = await res.json()
+                
+                if(data.message == "success"){
+                    location.assign("/admin/products")
+                }
+
+                if(data.errors == "maximum limit is four"){
+                  inputError.textContent = data.errors
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
+        })
+    </script>
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+
+    <!-- popper -->
+    <script src="/plugins/popper/js/popper.min.js"></script>
+
+    <!-- bootstrap -->
+    <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- slimscroll -->
+    <script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- uniform -->
+    <script src="/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+
+    <!-- switchery -->
+    <script src="/plugins/switchery/switchery.min.js"></script>
+
+    <!-- switchery -->
+    <script src="/plugins/quill/quill.js"></script>
+
+    <!-- tagsinput -->
+    <script src="/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+
+    <!-- form elements -->
+    <script src="/js/pages/form-elements.js"></script>
+
+    <!-- theme core scripts -->
+    <script src="/js/main.js"></script>
+
+    <!-- all js include end -->
+</body>
+
+</html>

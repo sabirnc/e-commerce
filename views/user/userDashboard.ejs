@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/icons/site.html">
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+    <style>
+        .order{
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: .5em 0;
+        }
+        .profile {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+          }
+        
+          .profile h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #666;
+            text-transform: uppercase;
+          }
+        
+          .profile hr {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin-bottom: 30px;
+          }
+        
+          .profile-info {
+            display: flex;
+            margin-bottom: 20px;
+          }
+        
+          .profile-info label {
+            flex-basis: 150px;
+            margin-right: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #666;
+          }
+        
+          .profile-info span {
+            font-size: 16px;
+            color: #333;
+          }
+        
+          @media screen and (max-width: 600px) {
+            .profile-info {
+              flex-direction: column;
+            }
+            .profile-info label {
+              margin-bottom: 10px;
+              flex-basis: auto;
+            }
+          }
+          .error{
+            color: red;
+          }
+    </style>
+    <div class="page-wrapper">
+        <%-include("../partials/nav.ejs")%>
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="dashboard">
+	                <div class="container">
+	                	<div class="row">
+	                		<aside class="col-md-4 col-lg-3">
+	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								    <li class="nav-item">
+								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false" onclick="displayOrder('<%=user.id%>')">Orders</a>
+								    </li>
+								    <!-- <li class="nav-item">
+								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+								    </li> -->
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" href="/sign-out">Sign Out</a>
+								    </li>
+								</ul>
+	                		</aside><!-- End .col-lg-3 -->
+
+	                		<div class="col-md-8 col-lg-9">
+	                			<div class="tab-content">
+								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+                                        <hr>                                       
+                                            <div class="profile">
+                                                <% if(user.profile){ %>
+                                                    <img src="<%=user.profile%>" style="width: 150px; border-radius: 50%; margin-bottom: 1em;" alt="" id="profilePic">
+                                                 <% }else{ %>
+                                                    <img src="assets/images/slider/blank-profile-picture-973460_960_720.webp" style="width: 150px; border-radius: 50%; margin-bottom: 1em;" alt="" id="profilePic">
+                                                <%}%>
+                                                <form action="" id="uploadPic">
+                                                <input type="file" name="file" id="file">
+                                               </form>
+                                                <h2>Profile Information</h2>
+                                                <hr>
+                                                <div class="profile-info">
+                                                  <label for="name">Name:</label>
+                                                  <span id="name"><%=user.fullName%></span>
+                                                </div>
+                                                <div class="profile-info">
+                                                  <label for="email">Email:</label>
+                                                  <span id="email"><%=user.email%></span>
+                                                </div>
+                                                <div class="profile-info">
+                                                  <label for="profile_phone"> Phone:</label>
+                                                  <span id="profile_phone"><%= user.phoneNumber%></span>
+                                                </div>
+                                              </div>
+                                          </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade " id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<% if(orders == null){ %> 
+                                        <p>No order has been made yet.</p>
+								    	<a href="/shop" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                        <% }else{ %> 
+                                            <div class="row" style="margin: .5em;" >
+                                             <% orders.map( order => { %> 
+                                                    <div class="col-sm-6 order">
+                                                      <div class="card">
+                                                        <div class="card-body">
+                                                          <h5 class="card-title"> order id : <%= order.orderId%></h5>
+                                                          <p class="card-title">order status:  <%= order.status%></p>
+                                                          <a href="/invoice/<%=order._id%>" class="btn btn-primary">view order details</a>
+                                                          <% if(order.status == "order confirmed") {%>
+                                                            <a href="#" id="cancelOrder" class="btn btn-primary" onclick="cancelOrder('<%=order._id%>')">cancel order</a>
+                                                          <% } %> 
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                             <% }) %>  
+                                            </div>   
+                                        <% } %> 
+								    </div>
+                                   
+
+								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+								    	<p>No downloads available yet.</p>
+								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div><!-- .End .tab-pane -->
+
+								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+								    	<p>The following addresses will be used on the checkout page by default.</p>
+
+								    	<div class="row">
+								    		<div class="col-lg-6">
+								    			<div class="card card-dashboard">
+								    				<div class="card-body">
+								    					<% if(address != null){ %>
+                                                        <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+														<p><%=address.UserAddress[0].firstName%><br>
+														<%=address.UserAddress[0].streetAdress%><br>
+														<%=address.UserAddress[0].phoneNumber%><br>
+														<%=address.UserAddress[0].email%><br>
+								                        <%=address.UserAddress[0].city%>
+                                                        <% }else{ %>
+                                                            <p>no address to show</p>
+                                                        <% } %>
+								    				</div>
+								    			</div>
+								    		</div>
+
+								    	</div><!-- End .row -->
+								    </div><!-- .End .tab-pane -->
+
+								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+								    	<form action="#" id="changeProfile">
+			                				<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>full Name *</label>
+			                						<input type="text" class="form-control" required name="fullName"  value="<%=user.fullName%>">
+                                                    <div class="fullNameError error"></div>
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>user Name *</label>
+			                						<input type="text" class="form-control" required name="userName" value="<%=user.userName%>">
+                                                    <div class="userNameError error"></div>
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+		                					<label>Email address *</label>
+		        							<input type="email" class="form-control" required name="email" value="<%=user.email%>">
+                                            <div class="emailError error"></div>
+
+		            						<label>Current password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control" name="currentPassword">
+                                            <div class="current error"></div>
+
+		            						<label>New password (leave blank to leave unchanged)</label>
+		            						<input type="password" class="form-control"name="newPassword" id="new">
+                                            <div class="newpassword error"></div>
+
+		            						<label>Confirm new password</label>
+		            						<input type="password" class="form-control mb-2" name="confirmPassword">
+                                            <div class="confirmPassword error"></div>
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+								</div>
+	                		</div><!-- End .col-lg-9 -->
+	                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+       <%-include("../partials/footer.ejs")%>
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+           <%-include("../partials/mobile-nav.ejs")  %>
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+    <!-- Sign in / Register Modal -->
+    <script>
+        const div = document.getElementById("tab-orders")
+        const profilePic = document.getElementById("profilePic")
+        async function displayOrder(id){
+          const res = await fetch(`/orders?id=${id}`, {
+            method:"GET",
+            headers:{"Content-Type":"application/json"},
+          })
+          const data = await res.json()
+          if(data.orders.length  < 1){
+            div.innerHTML = `<p>No order has been made yet.</p>
+							<a href="/shop" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>`
+          }
+        }
+
+       const file = document.getElementById("file")
+       const formData = new FormData()
+       file.addEventListener('change' , async function(){
+          formData.append("file", file.files[0])
+         try{
+           const res = await fetch("/upload" , {
+            method:"POST",
+            body:formData,
+           })
+
+           const data = await res.json()
+           console.log(typeof data.profile)
+           if(data.profile){
+             profilePic.src = data.profile
+             
+           }
+         }
+         catch(err){
+            alert("an error occured while uploading photo please try after some time")
+         }
+       })
+
+       const profileForm = document.getElementById("changeProfile")
+       const fullNameError = document.querySelector(".fullNameError.error")
+       const userNameError = document.querySelector(".userNameError.error")
+       const emailError = document.querySelector(".emailError.error")
+       const newPasswordError = document.querySelector(".newpassword.error")
+       const confirmPasswordError = document.querySelector(".confirmPassword.error")
+       const currentPasswordError = document.querySelector(".current.error")
+       const newp = document.getElementById("new")
+
+       profileForm.addEventListener("submit" , async function(e){
+         e.preventDefault()
+         const fullName = profileForm.fullName.value
+         const userName = profileForm.userName.value 
+         const email = profileForm.email.value
+         const currentPassword = profileForm.currentPassword.value
+         const newPassword = profileForm.newPassword.value
+         const confirmPassword = profileForm.confirmPassword.value
+         confirmPasswordError.textContent = ""
+         userNameError.textContent = ""
+         currentPasswordError.textContent = ""
+
+        if(newPassword.length > 6){
+            newPasswordError.textContent = ""
+        }
+
+        if(newPassword != confirmPassword){
+            confirmPasswordError.textContent = "password not matching"
+        }
+        else if(currentPassword.length && !newPassword.length){
+            newp.setAttribute('required' , true)
+            if(newPassword.length < 1){
+               alert("enter new password")
+            }
+        }
+        else if(newPassword.length < 1){
+            newPasswordError.textContent = "minimum 6 character require"
+            
+        }
+        else{    
+        try{
+         const res = await fetch("/update-profile" ,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({fullName , userName , email ,newPassword , currentPassword })
+         })
+         const  data = await res.json()
+         if(data.message){
+            location.reload()
+         }
+         if(data.err == 11000){
+           if(data.path){
+             userNameError.textContent = "username already taken"
+           }
+         }
+
+         if(data.pass){
+          currentPasswordError.textContent = data.pass
+         }
+        }
+        catch(err){
+          console.log(err)
+        }   
+        }
+      
+        
+         
+       
+        
+       
+        
+       })
+    </script>
+    <!-- Plugins JS File -->
+    <script src="/js/placeOrder.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/superfish.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="/assets/js/main.js"></script>
+</body>
+
+
+<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+</html>

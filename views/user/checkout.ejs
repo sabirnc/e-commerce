@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/icons/site.html">
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <script src="https://www.paypal.com/sdk/js?client-id=AWwuzZ4gloxezuQmOCAkDaqlhRJSdje_9L-gjIyKdU7CM_DHFr6Ir8T0jU3mHHoUkDKEKyRBUu1MRlc_"></script>
+
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+    <style>
+        .error{
+            color: red;
+        }
+        .modal-content{
+            border-radius: 10px;
+            padding: 1em;
+            color: black;
+        }
+        .remove-coupon{
+            border: 1px solid red;
+            border-radius: 10px;
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0 .5em;
+        }
+        #newAddress{
+            display:flex;
+            justify-content: space-between;
+        }
+
+        .edit-input{
+            border: none;
+            border-bottom: 1px solid black;
+            margin: .5em;
+            max-width: 200px;
+        }
+        .edit-input:focus{
+            outline: none;
+        }
+        .edit-input::placeholder{
+            font-family:monospace;
+        }
+        
+    </style>
+    <div class="page-wrapper">
+       <%-include("./partials/nav.ejs") %>  
+      <!-- End .header -->
+
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Checkout<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="checkout">
+	                <div class="container">
+            			<div class="checkout-discount">
+            				<form id="applyCoupon">
+        						<input type="text" class="form-control" required id="checkout-discount-input" name="coupon">
+            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                                <div class="error coupon"></div> 
+            				</form>
+                            <% if(user.couponApplied == true){ %> 
+                                <span class="badge badge-pill badge-success">Applied</span>
+                                <span class="remove-coupon" onclick="removeCoupon()">remove coupon</span>
+                            <% } %>
+            			</div>
+                        <div class="row" id="newAddress">
+                            <% if(address  == null){ %> 
+                                <form id="checkOut" onsubmit="return false">
+                                    <div class="col-lg-9">
+                                        <h2 class="checkout-title">Billing Details</h2>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>First Name *</label>
+                                                    <input type="text" class="form-control" name="firstName" id="firstName">
+                                                    <div class="error firstname"></div>
+                                                </div>
+    
+                                                <div class="col-sm-6">
+                                                    <label>Last Name *</label>
+                                                    <input type="text" class="form-control"  name="lastName" id="lastName">
+                                                    <div class="error lastname"></div>
+                                                </div>
+                                            </div>
+    
+                                            <label>Company Name (Optional)</label>
+                                            <input type="text" class="form-control" name="companyName" id="companyName">
+    
+                                            <label>Country *</label>
+                                            <input type="text" class="form-control"  name="country" id="country">
+                                            <div class="error country"></div>
+    
+                                            <label>Street address *</label>
+                                            <input type="text" class="form-control" placeholder="House number and Street name"  name="houseName" id="houseName">
+                                            <div class="error streetadress"></div>
+    
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Town / City *</label>
+                                                    <input type="text" class="form-control"  name="city" id="city">
+                                                    <div class="error city"></div>
+                                                </div>
+    
+                                                <div class="col-sm-6">
+                                                    <label>State / County *</label>
+                                                    <input type="text" class="form-control"  name="state" id="state">
+                                                    <div class="error state"></div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Postcode / ZIP *</label>
+                                                    <input type="text" class="form-control"  name="postcode" id="postcode">
+                                                    <div class="error postcode"></div>
+                                                </div>
+    
+                                                <div class="col-sm-6">
+                                                    <label>Phone *</label>
+                                                    <input type="tel" class="form-control"  name="phone" id="phone">
+                                                    <div class="error phone"></div>
+                                                </div>
+                                            </div>
+    
+                                            <label>Email address *</label>
+                                            <input type="email" class="form-control" name="email" id="email">
+                                            <div class="error email"></div>	
+                                            <button class="btn btn-outline-primary-2  btn-block" onclick="addAddress()">
+                                                <span class="btn-text"><a href="">add address</a></span>
+                                                 <span class="btn-hover-text">add address</span> 
+                                            </button>     
+                                                 							
+                                    </div>
+                                </form>
+                            <% }else { %>
+                                        <div class="col-sm-6" id="div" >
+                                        <% address.map( item => { %>
+                                    <div class="card">
+                                        <div class="card-body"  >
+                                            <div id="addressDetail-<%=item._id%>">
+                                                <input type="radio" id="select" name="select" onclick="selectAddress('<%=item.firstName%>' , '<%=item.streetAdress%>' , '<%=item.phoneNumber%>' , '<%=item.city%>' , '<%=item.state%>','<%=item.country%>','<%=item.postcode%>')" >
+                                                <h5 class="card-title"><b><%=item.firstName%></b> </h5>
+                                                <p class="card-text"><b><%=item.streetAdress%></b> </p>
+                                                <p class="card-text"><b><%=item.phoneNumber%></b> </p>
+                                                <p class="card-text"><b><%=item.city%></b></p>
+                                                <p class="card-text"><b><%=item.state%></b></p>
+                                                <p class="card-text"><b><%=item.country%></b> </p>
+                                                <p class="card-text"><b><%=item.postcode%></b> </p>
+                                               </div>
+                                                <div id="button-group-<%=item._id%>">
+                                                    <button class="btn btn-outline-primary-2" onclick="editAddress('<%=item._id%>' ,'<%=item.firstName%>','<%=item.streetAdress%>' , '<%=item.phoneNumber%>', '<%=item.city%>', '<%=item.state%>','<%=item.country%>','<%=item.postcode%>')">
+                                                        <span>edit address</span>
+                                                    </button>
+    
+                                                    <button class="btn btn-outline-primary-2" onclick="deleteAddress('<%=item._id%>')">
+                                                        <span class="btn-text"><a href="">Delete</a></span>
+                                                         <span class="btn-hover-text">Delete</span> 
+                                                    </button>
+                                                </div>   
+                                            </div>
+                                        </div>
+                                             <% }) %>
+                                             <div class="col-sm">
+                                                <button class="btn btn-outline-primary-2" data-toggle="modal" data-target=".bd-example-modal-lg">
+                                                    <span>New address</span>
+                                                </button>
+                                             </div>
+                                        </div>
+                                        
+                            <% } %> 
+		                		<aside class="col-lg-3">
+                                  <form onsubmit="return false">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3>
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+		                						
+                                               <% if(cart.item.length > 0){ %> 
+                                                <% cart.item.map( product => { %> 
+                                                    <tr>
+                                                        <td><a href="#"><%= product.product.productName%> </a></td>
+                                                        <td>$ <%= product.totalPrice %> </td>
+                                                    </tr>
+                                                <% }) %> 
+                                               <% } else{%>
+                                                <tr>
+                                                    <td>no item added in cart</td>
+                                                </tr>
+                                               <% } %> 
+                                            
+		                						<tr class="summary-total">
+                                                    <td>Total:</td>
+		                							<% if(cart.item.length > 0){ %> 
+		                							    <td>$ <%=cart.total %> </td>
+                                                    <% }else{ %> 
+                                                         <td>0</td> 
+                                                    <% } %> 
+		                						</tr>
+                                              
+		                					</tbody>
+		                				</table>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Cash On Delivery">
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                               Cash on delivery
+                                            </label>
+                                        </div>
+                                        <div id="paypal-button-container" style="margin: 0 auto;max-width: auto;"></div>
+                                          <div class="error payment"></div>
+                                            <button class="btn btn-outline-primary-2  btn-block"  onclick="placeOrder('<%=cart.owner._id%>')">
+                                                <span class="btn-text"><a href="">Place Order</a></span>
+                                                 <span class="btn-hover-text">Proceed to Checkout</span> 
+                                            </button>
+                                           
+                                          
+		                			</div>
+                                </form>   
+		                		</aside>
+		                	</div>
+	                </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->    
+        </main>
+        <!-- End .main -->
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <form id="checkOut" onsubmit="return false">
+                    <div class="col-lg-9">
+                        <h2 class="checkout-title">Billing Details</h2>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>First Name *</label>
+                                    <input type="text" class="form-control" required name="firstName" id="firstName">
+                                    <div class="error firstname"></div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Last Name *</label>
+                                    <input type="text" class="form-control" required name="lastName" id="lastName">
+                                    <div class="error lastname"></div>
+                                </div>
+                            </div>
+
+                            <label>Company Name (Optional)</label>
+                            <input type="text" class="form-control" name="companyName" id="companyName">
+
+                            <label>Country *</label>
+                            <input type="text" class="form-control" required name="country" id="country">
+                            <div class="error country"></div>
+
+                            <label>Street address *</label>
+                            <input type="text" class="form-control" placeholder="House number and Street name" required name="houseName" id="houseName">
+                            <div class="error streetadress"></div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Town / City *</label>
+                                    <input type="text" class="form-control" required name="city" id="city">
+                                    <div class="error city"></div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>State / County *</label>
+                                    <input type="text" class="form-control" required name="state" id="state">
+                                    <div class="error state"></div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Postcode / ZIP *</label>
+                                    <input type="text" class="form-control" required name="postcode" id="postcode">
+                                    <div class="error postcode"></div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label>Phone *</label>
+                                    <input type="tel" class="form-control" required name="phone" id="phone">
+                                    <div class="error phone"></div>
+                                </div>
+                            </div>
+
+                            <label>Email address *</label>
+                            <input type="email" class="form-control" required name="email" id="email">
+                            <div class="error email"></div>	
+                            <button class="btn btn-outline-primary-2  btn-block" onclick="addAddress()">
+                                <span class="btn-text"><a href="">add address</a></span>
+                                 <span class="btn-hover-text">add address</span> 
+                            </button>        							
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <%-include("./partials/footer.ejs")  %>
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+           <%-include("./partials/mobile-nav.ejs")%>
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" id="modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Your order placed successfully</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              thankyou for shopping with us 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary"><a href="/my-account" class="btn">my account</a></button>
+              <button type="button" class="btn btn-primary"><a href="/shop" class="btn">continue shopping</a></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    <script>        
+
+        // applying coupon on order 
+        const appliedCoupon = document.getElementById("appliedCoupon")
+        const couponRate = document.getElementById("couponRate")
+        const couponForm = document.querySelector("#applyCoupon")
+        const couponError = document.querySelector(".error.coupon")
+        couponForm.addEventListener("submit" , async (e) => {
+            e.preventDefault()
+            couponError.textContent = ""
+            const coupon = couponForm.coupon.value
+            try{
+                const res = await fetch("/apply-coupon" , {
+                    method:"POST",
+                    body:JSON.stringify({coupon}),
+                    headers:{"Content-Type":"application/json"}
+                })
+
+                const data = await res.json()
+                if(data.message){
+                    couponError.textContent = data.message
+                }
+                if(data.coupons){
+                  location.reload()
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
+        })
+
+
+        async  function removeCoupon(){
+           try{
+            const res = await fetch("/remove-coupon",{
+                method:"POST",
+                headers:{"Content-type":"application/json"}
+            })
+            const data = await res.json()
+            if(data.message){
+                location.reload()
+            }
+           }
+           catch(err){
+            console.log(err)
+           }
+        }
+           
+       
+
+        
+        
+    </script>
+     <script>
+        const radios = document.querySelector("#select")
+        paypal.Buttons({
+          // Order is created on the server and the order id is returned
+            createOrder() {
+
+            if(radios.checked){  
+            return fetch("/create-paypal-order", {
+              method: "post",
+              // use the "body" param to optionally pass additional order information
+              // like product skus and quantities
+
+              headers:{"Content-Type":"application/json"}
+            })
+            .then(res => {
+                if(res.ok) return res.json()
+                return res.json().then( json => Promise.reject(json))
+            })
+            .then(({id}) => {
+                return id
+            })
+            .catch(e => {
+                console.log(e)
+            })
+            }else{
+              alert("please enter your address to proceed payment")
+            }    
+           
+            
+         
+          },
+          // Finalize the transaction on the server after payer approval
+          onApprove(data , action) {
+            return action.order.capture().then( async function(details){
+               alert("transaction complete")
+               const element = document.getElementById("paypal-button-container")
+               element.classList.add("badge", "badge-pill" ,"badge-success")
+               element.innerHTML= "thank you for the payment"
+               const paymentError = document.querySelector(".error.payment");
+               paymentError.innerHTML = ""
+
+
+
+                //  const res = await fetch("/place-order",{
+                //   method:"POST",
+                //   body:JSON.stringify({paymentMethod:"Recieved"}),
+                //   headers:{"Content-type":"application/json"}
+                //  })
+
+                //  const data = await res.json()
+                //  if(data.success){
+                //     console.log("helo we")
+                //  }
+            
+            })
+           
+          }
+        }).render('#paypal-button-container');
+      </script>
+    <!-- Plugins JS File -->
+    <script src="/js/editAddress.js"></script>
+    <script src="/js/address.js"></script>
+    <script src="/js/placeOrder.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/assets/js/superfish.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="/assets/js/main.js"></script>
+</body>
+
+
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+</html>

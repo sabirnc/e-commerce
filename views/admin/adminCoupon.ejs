@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- metas -->
+    <meta charset="utf-8" />
+    <meta name="author" content="Chitrakoot Web" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="keywords" content="admin,dashboard" />
+    <meta name="description" content="Smartshop - Responsive eCommerce Admin Dashboard" />
+
+    <!-- title  -->
+    <title>MOLLA ADMIN</title>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/img/logos/favicon.png" />
+    <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/logos/apple-touch-icon-114x114.png" />
+
+    <!-- common plugins -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/plugins/icomoon/style.css" />
+    <link rel="stylesheet" href="/plugins/uniform/css/default.css" />
+    <link rel="stylesheet" href="/plugins/switchery/switchery.min.css" />
+
+    <!-- theme core css -->
+    <link rel="stylesheet" href="/css/styles.css" />
+
+</head>
+
+<body>
+
+    <!-- PAGE LOADING
+    ================================================== -->
+    <div id="preloader"></div>
+
+    <!-- PAGE CONTAINER
+    ================================================== -->
+    <div class="page-container">
+
+        <!-- PAGE SIDEBAR
+        ================================================== -->
+        <%-include("../partials/adminsidebar.ejs")%>
+        <!-- PAGE CONTENT
+        ================================================== -->
+        <div class="page-content">
+
+            <!-- PAGE HEADER
+            ================================================== -->
+            <div class="page-header">
+                <div class="search-form">
+                    <form action="#" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <div class="logo-sm">
+                                <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                                <a class="logo-box" href="index.html"><img src="../img/logos/logo.png" class="logo" alt="..."></a>
+                            </div>
+                            <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                        </div>
+                        <!-- /.navbar-collapse -->
+                    </div>
+                    <!-- /.container-fluid -->
+                </nav>
+            </div>
+
+            <!-- PAGE INNER
+            ================================================== -->
+            <div class="page-inner">
+
+                <!-- PAGE MAIN WRAPPER
+                ================================================== -->
+                <div id="main-wrapper">
+                    <!-- row -->
+                    <div class="row align-items-center grid-margin">
+                        <div class="col-12">
+                            <div class="card card-white">
+                                <div class="card-body row align-items-center">
+                                    <div class="col-12 col-md-4">
+                                        <h4 class="mb-4 mb-md-0">Coupons</h4>
+                                    </div>
+
+                                    <div class="col-12 col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3 mb-md-0">
+                                                <select class="form-control form-select">
+                                                    <option>Status</option>
+                                                    <option>Active</option>
+                                                    <option>revoked</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3 mb-3 mb-md-0">
+                                                <select class="form-control form-select">
+                                                    <option>Order Limits</option>
+                                                    <option>Last 7 Orders</option>
+                                                    <option>Last 15 Orders</option>
+                                                    <option>Last 30 Orders</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="exampleInputEmail1" placeholder="search by name" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-12 grid-margin">
+                            <div class="card card-white">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-order">
+                                            <thead>
+                                                <tr>
+                                                  
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Campaigns Name</th>
+                                                    <th scope="col">Code</th>
+                                                    <th scope="col">Remaining coupon</th>
+                                                    <th scope="col">Expiration Date</th>
+                                                    <th scope="col">Creation Date</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                  <% coupons.map( (coupon , index) => { %> 
+                                                    <tr>
+                                                        <td><%= index+1 %> </td>
+                                                        <td><%= coupon.couponName  %> </td>
+                                                        <td><%= coupon.couponCode %> </td>
+                                                        <td>
+                                                            <div class="custom-progress bg-blue">
+                                                                <progress id="file" value="<%=coupon.quantity%>" max="<%coupon.quantity%> "> 32% </progress>
+                                                            </div>
+                                                            <div class="progress-text">
+                                                                <div><%=coupon.quantity%> remaining </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><%=coupon.endDate.toLocaleString()  %> </td>
+                                                        <td><%= coupon.startDate.toLocaleString() %> </td>
+                                                        <td><i class="fas fa-circle text-danger me-2 f-s-10"></i>
+                                                        <% if(coupon.endDate < Date.now()){ %> 
+                                                            expired
+                                                        <% } else { %> 
+                                                            active
+                                                        <% } %> 
+                                                        </td>
+                                                        <td id="status-<%=coupon._id%>" onclick="disableCoupon('<%=coupon._id%>')">
+                                                            <% if(coupon.status){ %> 
+                                                                <button class="btn btn-outline-danger">enable</button>
+                                                             <% } else{%>  
+                                                                <button class="btn btn-outline-success">disable</button>
+                                                            <% } %> 
+                                                        </td>
+                                                    </tr>
+                                                  <% }) %> 
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div>
+
+                <div class="page-footer">
+                    <p>Copyright &copy; <span class="current-year"></span> Smartshop All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+    <!-- SCROLL TO TOP
+    ================================================== -->
+    <a href="#" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+    <!-- ALL JS INCLUDE
+    ================================================== -->
+    <script>
+        async function disableCoupon(id){
+          const statusDiv = document.getElementById("status-"+id)  
+          const res = await fetch("/admin/disable-coupon",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id})
+          })   
+          const data = await res.json()
+          if(data.data){
+            statusDiv.innerHTML = `<button class="btn btn-outline-danger">enable</button>`
+          }else{
+            statusDiv.innerHTML = `<button class="btn btn-outline-success">disable</button>`
+          }
+        }
+    </script>
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+
+    <!-- popper -->
+    <script src="/plugins/popper/js/popper.min.js"></script>
+
+    <!-- bootstrap -->
+    <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- slimscroll -->
+    <script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- uniform -->
+    <script src="/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+
+    <!-- switchery -->
+    <script src="/plugins/switchery/switchery.min.js"></script>
+
+    <!-- theme core scripts -->
+    <script src="/js/main.js"></script>
+
+    <!-- all js include end -->
+</body>
+
+</html>
